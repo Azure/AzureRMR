@@ -11,7 +11,7 @@ create_azure_login(tenant = "common", app = .az_cli_app_id,
   password = NULL, username = NULL, certificate = NULL,
   auth_type = NULL, host = "https://management.azure.com/",
   aad_host = "https://login.microsoftonline.com/", config_file = NULL,
-  token = NULL, ...)
+  token = NULL, create_graph_login = TRUE, ...)
 
 get_azure_login(tenant = "common", selection = NULL, refresh = TRUE)
 
@@ -39,6 +39,8 @@ list_azure_logins()
 \item{config_file}{Optionally, a JSON file containing any of the arguments listed above. Arguments supplied in this file take priority over those supplied on the command line. You can also use the output from the Azure CLI \code{az ad sp create-for-rbac} command.}
 
 \item{token}{Optionally, an OAuth 2.0 token, of class \link{AzureToken}. This allows you to reuse the authentication details for an existing session. If supplied, all other arguments to \code{create_azure_login} will be ignored.}
+
+\item{create_graph_login}{Whether to create a Microsoft Graph client as well, with the same credentials. This is  useful for resources that will interact with registered apps and service principals. Requires the AzureGraph package.}
 
 \item{...}{For \code{create_azure_login, other arguments passed to }get_azure_token`.}
 

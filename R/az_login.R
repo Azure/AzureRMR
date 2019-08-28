@@ -10,6 +10,7 @@
 #' @param aad_host Azure Active Directory host for authentication. Defaults to `https://login.microsoftonline.com/`. Change this if you are using a government or private cloud.
 #' @param config_file Optionally, a JSON file containing any of the arguments listed above. Arguments supplied in this file take priority over those supplied on the command line. You can also use the output from the Azure CLI `az ad sp create-for-rbac` command.
 #' @param token Optionally, an OAuth 2.0 token, of class [AzureToken]. This allows you to reuse the authentication details for an existing session. If supplied, all other arguments to `create_azure_login` will be ignored.
+#' @param create_graph_login Whether to create a Microsoft Graph client as well, with the same credentials. This is  useful for resources that will interact with registered apps and service principals. Requires the AzureGraph package.
 #' @param refresh For `get_azure_login`, whether to refresh the authentication token on loading the client.
 #' @param selection For `get_azure_login`, if you have multiple logins for a given tenant, which one to use. This can be a number, or the input MD5 hash of the token used for the login. If not supplied, `get_azure_login` will print a menu and ask you to choose a login.
 #' @param confirm For `delete_azure_login`, whether to ask for confirmation before deleting.
@@ -64,7 +65,7 @@
 create_azure_login <- function(tenant="common", app=.az_cli_app_id,
                                password=NULL, username=NULL, certificate=NULL, auth_type=NULL,
                                host="https://management.azure.com/", aad_host="https://login.microsoftonline.com/",
-                               config_file=NULL, token=NULL, ...)
+                               config_file=NULL, token=NULL, create_graph_login=TRUE, ...)
 {
     if(!is_azure_token(token))
     {
@@ -108,6 +109,9 @@ create_azure_login <- function(tenant="common", app=.az_cli_app_id,
     arm_logins <- load_arm_logins()
     arm_logins[[tenant]] <- sort(unique(c(arm_logins[[tenant]], client$token$hash())))
     save_arm_logins(arm_logins)
+
+    if(create_graph_login)
+        make_graph_login_from_token(tenant, token)
 
     client
 }
