@@ -1,5 +1,6 @@
 # AzureRMR 2.1.3.9000
 
+- Fix a bug where `create_azure_login` still required the `tenant` argument when a token was supplied.
 - Fixes to allow use of Azure Active Directory v2.0 tokens for authenticating. Note that AAD v1.0 is still the default and recommended version.
 
 # AzureRMR 2.1.3

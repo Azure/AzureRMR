@@ -102,6 +102,7 @@ create_azure_login <- function(tenant="common", app=.az_cli_app_id,
         message("Creating Azure Resource Manager login for ", format_tenant(tenant))
         token <- do.call(get_azure_token, token_args)
     }
+    else tenant <- token$tenant
 
     client <- az_rm$new(token=token)
 
