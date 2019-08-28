@@ -11,5 +11,5 @@ make_graph_login_from_token <- function(tenant, token)
 
     newtoken$refresh()
 
-    AzureGraph::create_graph_login(tenant=tenant, token=newtoken)
+    AzureGraph::create_graph_login(tenant=normalize_tenant(tenant), token=newtoken)
 }
