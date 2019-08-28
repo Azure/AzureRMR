@@ -9,8 +9,8 @@
 #' @param host Your ARM host. Defaults to `https://management.azure.com/`. Change this if you are using a government or private cloud.
 #' @param aad_host Azure Active Directory host for authentication. Defaults to `https://login.microsoftonline.com/`. Change this if you are using a government or private cloud.
 #' @param config_file Optionally, a JSON file containing any of the arguments listed above. Arguments supplied in this file take priority over those supplied on the command line. You can also use the output from the Azure CLI `az ad sp create-for-rbac` command.
-#' @param token Optionally, an OAuth 2.0 token, of class [AzureToken]. This allows you to reuse the authentication details for an existing session. If supplied, all other arguments to `create_azure_login` will be ignored.
-#' @param create_graph_login Whether to create a Microsoft Graph client as well, with the same credentials. This is  useful for resources that will interact with registered apps and service principals. Requires the AzureGraph package.
+#' @param token Optionally, an OAuth 2.0 token, of class [AzureToken]. This allows you to reuse the authentication details for an existing session. If supplied, the other arguments above to `create_azure_login` will be ignored.
+#' @param graph_host The Microsoft Graph endpoint. If this is not `NULL` and the AzureGraph package is installed, `create_azure_login` will create a Microsoft Graph login as well, with the same credentials. This is useful for interacting with registered apps and service principals, eg when managing role-based access controls.
 #' @param refresh For `get_azure_login`, whether to refresh the authentication token on loading the client.
 #' @param selection For `get_azure_login`, if you have multiple logins for a given tenant, which one to use. This can be a number, or the input MD5 hash of the token used for the login. If not supplied, `get_azure_login` will print a menu and ask you to choose a login.
 #' @param confirm For `delete_azure_login`, whether to ask for confirmation before deleting.
