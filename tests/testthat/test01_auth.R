@@ -27,13 +27,13 @@ test_that("Login interface works",
     lst <- list_azure_logins()
     expect_true(is.list(lst))
 
-    az3 <- create_azure_login(tenant=tenant, app=app, password=password)
+    az3 <- create_azure_login(tenant=tenant, app=app, password=password, graph_host=NULL)
     expect_is(az3, "az_rm")
 
     creds <- tempfile(fileext=".json")
     writeLines(jsonlite::toJSON(list(tenant=tenant, app=app, password=password)), creds)
 
-    az4 <- create_azure_login(config_file=creds)
+    az4 <- create_azure_login(config_file=creds, graph_host=NULL)
     expect_identical(normalize_tenant(tenant), az4$tenant)
     expect_is(az4, "az_rm")
 
@@ -41,7 +41,21 @@ test_that("Login interface works",
     expect_is(az5, "az_rm")
 
     tok <- get_azure_token("https://management.azure.com/", tenant, app, password)
-    az6 <- create_azure_login(token=tok)
+    az6 <- create_azure_login(token=tok, graph_host=NULL)
     expect_is(az6, "az_rm")
 })
 
+test_that("Graph interop works",
+{
+    if(!requireNamespace("AzureGraph"))
+        skip("Graph interop tests skipped: AzureGraph not installed")
+
+    graph_logins <- file.path(AzureR_dir(), "graph_logins.json")
+    suppressWarnings(file.remove(graph_logins))
+
+    az <- create_azure_login(tenant=tenant, app=app, password=password)
+    expect_true(file.exists(graph_logins))
+
+    gr <- AzureGraph::get_graph_login(tenant)
+    expect_is(gr, "ms_graph")
+})
