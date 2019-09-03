@@ -1,6 +1,6 @@
 make_graph_login_from_token <- function(token, aad_host, graph_host)
 {
-    if(!requireNamespace("AzureGraph"))
+    if(!requireNamespace("AzureGraph", quietly=TRUE))
         return()
 
     message("Also creating Microsoft Graph login for ", format_tenant(token$tenant))
