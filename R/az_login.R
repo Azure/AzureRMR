@@ -111,8 +111,7 @@ create_azure_login <- function(tenant="common", app=.az_cli_app_id,
     arm_logins[[tenant]] <- sort(unique(c(arm_logins[[tenant]], client$token$hash())))
     save_arm_logins(arm_logins)
 
-    if(!is_empty(graph_host))
-        make_graph_login_from_token(token, aad_host, graph_host)
+    make_graph_login_from_token(token, aad_host, graph_host)
 
     client
 }
