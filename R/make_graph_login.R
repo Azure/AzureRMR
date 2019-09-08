@@ -11,5 +11,7 @@ make_graph_login_from_token <- function(token, aad_host, graph_host)
 
     newtoken$refresh()
 
-    AzureGraph::create_graph_login(tenant=token$tenant, token=newtoken)
+    res <- try(AzureGraph::create_graph_login(tenant=token$tenant, token=newtoken))
+    if(inherits(res, "try-error"))
+        warning("Unable to create Microsoft Graph login", call.=FALSE)
 }
