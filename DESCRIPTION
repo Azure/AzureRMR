@@ -13,7 +13,7 @@ VignetteBuilder: knitr
 Depends: 
     R (>= 3.3)
 Imports: 
-    AzureAuth (>= 1.0.1),
+    AzureAuth (>= 1.2.1),
     utils,
     httr (>= 1.3),
     jsonlite,
