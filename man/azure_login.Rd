@@ -40,7 +40,7 @@ list_azure_logins()
 
 \item{token}{Optionally, an OAuth 2.0 token, of class \link{AzureToken}. This allows you to reuse the authentication details for an existing session. If supplied, the other arguments above to \code{create_azure_login} will be ignored.}
 
-\item{graph_host}{The Microsoft Graph endpoint. If this is not \code{NULL} and the AzureGraph package is installed, \code{create_azure_login} will create a Microsoft Graph login as well, with the same credentials. This is useful for interacting with registered apps and service principals, eg when managing role-based access controls.}
+\item{graph_host}{The Microsoft Graph endpoint. See 'Microsoft Graph integration' below.}
 
 \item{...}{For \code{create_azure_login, other arguments passed to }get_azure_token`.}
 
@@ -67,6 +67,11 @@ Login to Azure Resource Manager
 
 One difference between \code{create_azure_login} and \code{get_azure_login} is the former will delete any previously saved credentials that match the arguments it was given. You can use this to force AzureRMR to remove obsolete tokens that may be lying around.
 }
+\section{Microsoft Graph integration}{
+
+If the AzureGraph package is installed and the \code{graph_host} argument is not \code{NULL}, \code{create_azure_login} will also create a login client for Microsoft Graph with the same credentials. This is to facilitate working with registered apps and service principals, eg when managing roles and permissions. Some Azure services also require creating service principals as part of creating a resource (eg Azure Kubernetes Service), and keeping the Graph credentials consistent with ARM helps ensure nothing breaks.
+}
+
 \section{Linux DSVM note}{
 
 If you are using a Linux \href{https://azure.microsoft.com/en-us/services/virtual-machines/data-science-virtual-machines/}{Data Science Virtual Machine} in Azure, you may have problems running \code{create_azure_login()} (ie, without any arguments). In this case, try \code{create_azure_login(auth_type="device_code")}.
@@ -91,7 +96,7 @@ az <- create_azure_login(config_file="~/creds.json")
 }
 }
 \seealso{
-\link{az_rm}, \link[AzureAuth:get_azure_token]{AzureAuth::get_azure_token} for more details on authentication methods
+\link{az_rm}, \link[AzureAuth:get_azure_token]{AzureAuth::get_azure_token} for more details on authentication methods, \link[AzureGraph:create_graph_login]{AzureGraph::create_graph_login} for the corresponding function to create a Microsoft Graph login client
 
 \href{https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview}{Azure Resource Manager overview},
 \href{https://docs.microsoft.com/en-us/rest/api/resources/}{REST API reference}

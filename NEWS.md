@@ -1,5 +1,6 @@
 # AzureRMR 2.1.3.9000
 
+- If the AzureGraph package is installed and the `graph_host` argument is not `NULL`, `create_azure_login` will also create a login client for Microsoft Graph with the same credentials. This is to facilitate working with registered apps and service principals, eg when managing roles and permissions. Some Azure services also require creating service principals as part of creating a resource (eg Azure Kubernetes Service), and keeping the Graph credentials consistent with ARM helps ensure nothing breaks.
 - Fix a bug where `create_azure_login` still required the `tenant` argument when a token was supplied.
 - Fixes to allow use of Azure Active Directory v2.0 tokens for authenticating. Note that AAD v1.0 is still the default and recommended version.
 
