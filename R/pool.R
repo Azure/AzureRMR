@@ -1,13 +1,22 @@
 #' Manage parallel Azure connections
 #'
-#' @param size The number of background R processes to create. Limit this is you are low on memory.
+#' @param size For `init_pool`, the number of background R processes to create. Limit this is you are low on memory.
 #' @param restart For `init_pool`, whether to terminate an already running pool first.
-#' @param ... Other arguments passed on to functions in the parallel package.
+#' @param ... Other arguments passed on to functions in the parallel package. See below.
 #'
 #' @details
-#' AzureRMR provides the ability to parallelise communicating with Azure by utilizing a pool of R processes in the background. This often leads to major speedups in scenarios like downloading large numbers of small files, or communicating with a cluster of virtual machines. The pool is created by calling `init_pool`. It remains persistent for the session or until terminated by `delete_pool`.
+#' AzureRMR provides the ability to parallelise communicating with Azure by utilizing a pool of R processes in the background. This often leads to major speedups in scenarios like downloading large numbers of small files, or working with a cluster of virtual machines. This functionality is intended for use by packages that extend AzureRMR, but can also be called directly by the end-user.
 #'
-#' If `init_pool` is called and the current pool is smaller than `size`, it is resized.
+#' A small API consisting of the following functions is currently provided for managing the pool. They pass their arguments down to the corresponding functions in the parallel package.
+#' - `init_pool` initialises the pool, creating it if necessary. The pool is created by calling `parallel::makeCluster` with the pool size and any additional arguments. If `init_pool` is called and the current pool is smaller than `size`, it is resized.
+#' - `delete_pool` shuts down the background processes and deletes the pool.
+#' - `pool_exists` checks for the existence of the pool, returning a TRUE/FALSE value.
+#' - `pool_size` returns the size of the pool, or zero if the pool has not been created.
+#' - `pool_export` exports variables to the pool processes. It calls `parallel::clusterExport` with the given arguments.
+#' - `pool_lapply`, `pool_sapply` and `pool_map` carry out work on the pool. They call `parallel::parLapply`, `parallel::parSapply` and `parallel::clusterMap` with the given arguments.
+#' - `pool_call` and `pool_evalq` execute code on the pool nodes. They call `parallel::clusterCall` and `parallel::clusterEvalQ` with the given arguments.
+#'
+#' The pool is persistent for the session or until terminated by `delete_pool`. You should initialise the pool by calling `init_pool` before running any code on it. This restores the original state of the pool nodes by removing any objects that may be in memory, and resetting the working directory to the master working directory.
 #'
 #' @rdname pool
 #' @export
@@ -16,17 +25,17 @@ init_pool <- function(size=10, restart=FALSE, ...)
     if(restart)
         delete_pool()
 
-    if(pool_exists() || length(.AzureR$pool) < size)
+    if(!pool_exists() || pool_size() < size)
     {
         delete_pool()
         message("Creating background pool")
         .AzureR$pool <- parallel::makeCluster(size, ...)
-        parallel::clusterEvalQ(.AzureR$pool, loadNamespace("AzureStor"))
+        pool_evalq(loadNamespace("AzureRMR"))
     }
     else
     {
         # restore original state, set working directory to master working directory
-        parallel::clusterCall(.AzureR$pool, function(wd)
+        pool_call(function(wd)
         {
             setwd(wd)
             rm(list=ls(all.names=TRUE), envir=.GlobalEnv)
@@ -55,6 +64,16 @@ delete_pool <- function()
 pool_exists <- function()
 {
     exists("pool", envir=.AzureR) && inherits(.AzureR$pool, "cluster")
+}
+
+
+#' @rdname pool
+#' @export
+pool_size <- function()
+{
+    if(!pool_exists())
+        return(0)
+    length(.AzureR$pool)
 }
 
 

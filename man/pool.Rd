@@ -4,6 +4,7 @@
 \alias{init_pool}
 \alias{delete_pool}
 \alias{pool_exists}
+\alias{pool_size}
 \alias{pool_export}
 \alias{pool_lapply}
 \alias{pool_sapply}
@@ -18,6 +19,8 @@ delete_pool()
 
 pool_exists()
 
+pool_size()
+
 pool_export(...)
 
 pool_lapply(...)
@@ -31,17 +34,28 @@ pool_call(...)
 pool_evalq(...)
 }
 \arguments{
-\item{size}{The number of background R processes to create. Limit this is you are low on memory.}
+\item{size}{For \code{init_pool}, the number of background R processes to create. Limit this is you are low on memory.}
 
 \item{restart}{For \code{init_pool}, whether to terminate an already running pool first.}
 
-\item{...}{Other arguments passed on to functions in the parallel package.}
+\item{...}{Other arguments passed on to functions in the parallel package. See below.}
 }
 \description{
 Manage parallel Azure connections
 }
 \details{
-AzureRMR provides the ability to parallelise communicating with Azure by utilizing a pool of R processes in the background. This often leads to major speedups in scenarios like downloading large numbers of small files, or communicating with a cluster of virtual machines. The pool is created by calling \code{init_pool}. It remains persistent for the session or until terminated by \code{delete_pool}.
+AzureRMR provides the ability to parallelise communicating with Azure by utilizing a pool of R processes in the background. This often leads to major speedups in scenarios like downloading large numbers of small files, or working with a cluster of virtual machines. This functionality is intended for use by packages that extend AzureRMR, but can also be called directly by the end-user.
 
-If \code{init_pool} is called and the current pool is smaller than \code{size}, it is resized.
+A small API consisting of the following functions is currently provided for managing the pool. They pass their arguments down to the corresponding functions in the parallel package.
+\itemize{
+\item \code{init_pool} initialises the pool, creating it if necessary. The pool is created by calling \code{parallel::makeCluster} with the pool size and any additional arguments. If \code{init_pool} is called and the current pool is smaller than \code{size}, it is resized.
+\item \code{delete_pool} shuts down the background processes and deletes the pool.
+\item \code{pool_exists} checks for the existence of the pool, returning a TRUE/FALSE value.
+\item \code{pool_size} returns the size of the pool, or zero if the pool has not been created.
+\item \code{pool_export} exports variables to the pool processes. It calls \code{parallel::clusterExport} with the given arguments.
+\item \code{pool_lapply}, \code{pool_sapply} and \code{pool_map} carry out work on the pool. They call \code{parallel::parLapply}, \code{parallel::parSapply} and \code{parallel::clusterMap} with the given arguments.
+\item \code{pool_call} and \code{pool_evalq} execute code on the pool nodes. They call \code{parallel::clusterCall} and \code{parallel::clusterEvalQ} with the given arguments.
+}
+
+The pool is persistent for the session or until terminated by \code{delete_pool}. You should initialise the pool by calling \code{init_pool} before running any code on it. This restores the original state of the pool nodes by removing any objects that may be in memory, and resetting the working directory to the master working directory.
 }
