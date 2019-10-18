@@ -3,18 +3,39 @@
 \name{init_pool}
 \alias{init_pool}
 \alias{delete_pool}
+\alias{pool_exists}
+\alias{pool_export}
+\alias{pool_lapply}
+\alias{pool_sapply}
+\alias{pool_map}
+\alias{pool_call}
+\alias{pool_evalq}
 \title{Manage parallel Azure connections}
 \usage{
 init_pool(size = 10, restart = FALSE, ...)
 
 delete_pool()
+
+pool_exists()
+
+pool_export(...)
+
+pool_lapply(...)
+
+pool_sapply(...)
+
+pool_map(...)
+
+pool_call(...)
+
+pool_evalq(...)
 }
 \arguments{
 \item{size}{The number of background R processes to create. Limit this is you are low on memory.}
 
 \item{restart}{For \code{init_pool}, whether to terminate an already running pool first.}
 
-\item{...}{Other arguments passed on to \code{parallel::makeCluster}.}
+\item{...}{Other arguments passed on to functions in the parallel package.}
 }
 \description{
 Manage parallel Azure connections
