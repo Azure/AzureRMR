@@ -18,14 +18,13 @@
 #'
 #' The pool is persistent for the session or until terminated by `delete_pool`. You should initialise the pool by calling `init_pool` before running any code on it. This restores the original state of the pool nodes by removing any objects that may be in memory, and resetting the working directory to the master working directory.
 #'
+#' @seealso
+#' [parallel::makeCluster], [parallel::clusterCall], [parallel::parLapply]
 #' @rdname pool
 #' @export
 init_pool <- function(size=10, restart=FALSE, ...)
 {
-    if(restart)
-        delete_pool()
-
-    if(!pool_exists() || pool_size() < size)
+    if(restart || !pool_exists() || pool_size() < size)
     {
         delete_pool()
         message("Creating background pool")
@@ -38,7 +37,7 @@ init_pool <- function(size=10, restart=FALSE, ...)
         pool_call(function(wd)
         {
             setwd(wd)
-            rm(list=ls(all.names=TRUE), envir=.GlobalEnv)
+            rm(list=ls(envir=.GlobalEnv, all.names=TRUE), envir=.GlobalEnv)
         }, wd=getwd())
     }
 
@@ -51,7 +50,7 @@ init_pool <- function(size=10, restart=FALSE, ...)
 delete_pool <- function()
 {
     if(!pool_exists())
-        return()
+        return(invisible(NULL))
 
     message("Deleting background pool")
     parallel::stopCluster(.AzureR$pool)
