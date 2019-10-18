@@ -2,7 +2,7 @@
 #' @importFrom utils modifyList
 NULL
 
-utils::globalVariables(c("self", "private"))
+utils::globalVariables(c("self", "private", "pool"))
 
 .onLoad <- function(libname, pkgname)
 {

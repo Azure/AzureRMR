@@ -41,7 +41,7 @@ init_pool <- function(size=10, restart=FALSE, ...)
 #' @export
 delete_pool <- function()
 {
-    if(!exists("pool", envir=.AzureR))
+    if(!pool_exists())
         return()
 
     message("Deleting background pool")
