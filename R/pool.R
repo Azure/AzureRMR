@@ -12,7 +12,7 @@
 #' - `delete_pool` shuts down the background processes and deletes the pool.
 #' - `pool_exists` checks for the existence of the pool, returning a TRUE/FALSE value.
 #' - `pool_size` returns the size of the pool, or zero if the pool has not been created.
-#' - `pool_export` exports variables to the pool processes. It calls `parallel::clusterExport` with the given arguments.
+#' - `pool_export` exports variables to the pool nodes. It calls `parallel::clusterExport` with the given arguments.
 #' - `pool_lapply`, `pool_sapply` and `pool_map` carry out work on the pool. They call `parallel::parLapply`, `parallel::parSapply` and `parallel::clusterMap` with the given arguments.
 #' - `pool_call` and `pool_evalq` execute code on the pool nodes. They call `parallel::clusterCall` and `parallel::clusterEvalQ` with the given arguments.
 #'

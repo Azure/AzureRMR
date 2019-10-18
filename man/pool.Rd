@@ -52,7 +52,7 @@ A small API consisting of the following functions is currently provided for mana
 \item \code{delete_pool} shuts down the background processes and deletes the pool.
 \item \code{pool_exists} checks for the existence of the pool, returning a TRUE/FALSE value.
 \item \code{pool_size} returns the size of the pool, or zero if the pool has not been created.
-\item \code{pool_export} exports variables to the pool processes. It calls \code{parallel::clusterExport} with the given arguments.
+\item \code{pool_export} exports variables to the pool nodes. It calls \code{parallel::clusterExport} with the given arguments.
 \item \code{pool_lapply}, \code{pool_sapply} and \code{pool_map} carry out work on the pool. They call \code{parallel::parLapply}, \code{parallel::parSapply} and \code{parallel::clusterMap} with the given arguments.
 \item \code{pool_call} and \code{pool_evalq} execute code on the pool nodes. They call \code{parallel::clusterCall} and \code{parallel::clusterEvalQ} with the given arguments.
 }
