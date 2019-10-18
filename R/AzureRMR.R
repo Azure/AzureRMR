@@ -14,6 +14,12 @@ utils::globalVariables(c("self", "private"))
     invisible(NULL)
 }
 
+.onUnLoad <- function(libname, pkgname)
+{
+    if(exists("pool", envir=.AzureR))
+        try(parallel::stopCluster(.AzureR$pool), silent=TRUE)
+}
+
 
 # default authentication app ID: leverage the az CLI
 .az_cli_app_id <- "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
