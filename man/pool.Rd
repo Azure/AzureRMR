@@ -44,18 +44,40 @@ pool_evalq(...)
 Manage parallel Azure connections
 }
 \details{
-AzureRMR provides the ability to parallelise communicating with Azure by utilizing a pool of R processes in the background. This often leads to major speedups in scenarios like downloading large numbers of small files, or working with a cluster of virtual machines. This functionality is intended for use by packages that extend AzureRMR, but can also be called directly by the end-user.
+AzureRMR provides the ability to parallelise communicating with Azure by utilizing a pool of R processes in the background. This often leads to major speedups in scenarios like downloading large numbers of small files, or working with a cluster of virtual machines. This functionality is intended for use by packages that extend AzureRMR (and was originally implemented as part of the AzureStor package), but can also be called directly by the end-user.
 
 A small API consisting of the following functions is currently provided for managing the pool. They pass their arguments down to the corresponding functions in the parallel package.
 \itemize{
 \item \code{init_pool} initialises the pool, creating it if necessary. The pool is created by calling \code{parallel::makeCluster} with the pool size and any additional arguments. If \code{init_pool} is called and the current pool is smaller than \code{size}, it is resized.
 \item \code{delete_pool} shuts down the background processes and deletes the pool.
 \item \code{pool_exists} checks for the existence of the pool, returning a TRUE/FALSE value.
-\item \code{pool_size} returns the size of the pool, or zero if the pool has not been created.
+\item \code{pool_size} returns the size of the pool, or zero if the pool does not exist.
 \item \code{pool_export} exports variables to the pool nodes. It calls \code{parallel::clusterExport} with the given arguments.
 \item \code{pool_lapply}, \code{pool_sapply} and \code{pool_map} carry out work on the pool. They call \code{parallel::parLapply}, \code{parallel::parSapply} and \code{parallel::clusterMap} with the given arguments.
 \item \code{pool_call} and \code{pool_evalq} execute code on the pool nodes. They call \code{parallel::clusterCall} and \code{parallel::clusterEvalQ} with the given arguments.
 }
 
 The pool is persistent for the session or until terminated by \code{delete_pool}. You should initialise the pool by calling \code{init_pool} before running any code on it. This restores the original state of the pool nodes by removing any objects that may be in memory, and resetting the working directory to the master working directory.
+}
+\examples{
+\dontrun{
+
+init_pool()
+
+pool_size()
+
+x <- 42
+pool_export("x")
+pool_sapply(1:5, function(i) i + x)
+
+init_pool()
+# error: x no longer exists on nodes
+try(pool_sapply(1:5, function(i) i + x))
+
+delete_pool()
+
+}
+}
+\seealso{
+\link[parallel:makeCluster]{parallel::makeCluster}, \link[parallel:clusterCall]{parallel::clusterCall}, \link[parallel:parLapply]{parallel::parLapply}
 }

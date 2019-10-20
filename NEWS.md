@@ -1,6 +1,8 @@
-# AzureRMR 2.2.1
+# AzureRMR 2.2.1.9000
 
+- New in this version is a facility for parallelising connections to Azure, using a pool of background processes. Some operations, such as downloading many small files or interacting with a cluster of VMs, can be sped up significantly by carrying them out in parallel rather than sequentially. The code for this is currently duplicated in multiple packages including AzureStor and AzureVM; putting it in AzureRMR removes the duplication and also makes it available to other packages that may benefit. See `?pool` for more details.
 - Expose `do_operation` methods for subscription and resource group objects, similar to that for resources. This allows arbitrary operations on a sub or RG.
+- AzureRMR now directly imports AzureGraph.
 - Update default Resource Manager API version to "2019-08-01".
 
 # AzureRMR 2.2.0

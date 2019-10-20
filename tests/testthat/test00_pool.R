@@ -23,7 +23,7 @@ test_that("Background process pool works",
 
     y <- 42
     pool_export("y", environment())
-    rm(y)  # why is this needed??
+    rm(y)  # work around testthat environment shenanigans
     res <- pool_sapply(1:5, function(x) y)
     expect_identical(res, rep(42, 5))
 
