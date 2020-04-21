@@ -4,7 +4,9 @@
 \name{az_resource}
 \alias{az_resource}
 \title{Azure resource class}
-\format{An R6 object of class \code{az_resource}.}
+\format{
+An R6 object of class \code{az_resource}.
+}
 \description{
 Class representing a generic Azure resource.
 }

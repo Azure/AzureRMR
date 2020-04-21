@@ -4,7 +4,9 @@
 \name{az_role_definition}
 \alias{az_role_definition}
 \title{Azure role definition class}
-\format{An R6 object of class \code{az_role_definition}.}
+\format{
+An R6 object of class \code{az_role_definition}.
+}
 \description{
 Azure role definition class
 }

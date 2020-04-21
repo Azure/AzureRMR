@@ -4,7 +4,9 @@
 \name{az_resource_group}
 \alias{az_resource_group}
 \title{Azure resource group class}
-\format{An R6 object of class \code{az_resource_group}.}
+\format{
+An R6 object of class \code{az_resource_group}.
+}
 \description{
 Class representing an Azure resource group.
 }

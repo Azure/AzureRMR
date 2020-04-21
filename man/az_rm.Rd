@@ -4,7 +4,9 @@
 \name{az_rm}
 \alias{az_rm}
 \title{Azure Resource Manager}
-\format{An R6 object of class \code{az_rm}.}
+\format{
+An R6 object of class \code{az_rm}.
+}
 \description{
 Base class for interacting with Azure Resource Manager.
 }
@@ -15,6 +17,7 @@ Base class for interacting with Azure Resource Manager.
 \item \code{list_subscriptions()}: Returns a list of objects, one for each subscription associated with this app ID.
 \item \code{get_subscription(id)}: Returns an object representing a subscription.
 \item \code{get_subscription_by_name(name)}: Returns the subscription with the given name (as opposed to a GUID).
+\item \code{do_operation(...)}: Carry out an operation. See 'Operations' for more details.
 }
 }
 
@@ -35,6 +38,19 @@ To authenticate with the \code{az_rm} class directly, provide the following argu
 \item \code{...}: Further arguments to pass to \code{get_azure_token}.
 \item \code{token}: Optionally, an OAuth 2.0 token, of class \link{AzureToken}. This allows you to reuse the authentication details for an existing session. If supplied, all other arguments will be ignored.
 }
+}
+
+\section{Operations}{
+
+The \code{do_operation()} method allows you to carry out arbitrary operations on the Resource Manager endpoint. It takes the following arguments:
+\itemize{
+\item \code{op}: The operation in question, which will be appended to the URL path of the request.
+\item \code{options}: A named list giving the URL query parameters.
+\item \code{...}: Other named arguments passed to \link{call_azure_rm}, and then to the appropriate call in httr. In particular, use \code{body} to supply the body of a PUT, POST or PATCH request, and \code{api_version} to set the API version.
+\item \code{http_verb}: The HTTP verb as a string, one of \code{GET}, \code{PUT}, \code{POST}, \code{DELETE}, \code{HEAD} or \code{PATCH}.
+}
+
+Consult the Azure documentation for what operations are supported.
 }
 
 \examples{

@@ -4,7 +4,9 @@
 \name{az_template}
 \alias{az_template}
 \title{Azure template class}
-\format{An R6 object of class \code{az_template}.}
+\format{
+An R6 object of class \code{az_template}.
+}
 \description{
 Class representing an Azure deployment template.
 }

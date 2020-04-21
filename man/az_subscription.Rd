@@ -4,7 +4,9 @@
 \name{az_subscription}
 \alias{az_subscription}
 \title{Azure subscription class}
-\format{An R6 object of class \code{az_subscription}.}
+\format{
+An R6 object of class \code{az_subscription}.
+}
 \description{
 Class representing an Azure subscription.
 }
