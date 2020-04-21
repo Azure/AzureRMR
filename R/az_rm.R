@@ -119,6 +119,11 @@ public=list(
         named_list(lst, "id")
     },
 
+    do_operation=function(..., options=list(), http_verb="GET")
+    {
+        private$rm_op(..., options=options, http_verb=http_verb)
+    },
+
     print=function(...)
     {
         cat("<Azure Resource Manager client>\n")
@@ -128,6 +133,14 @@ public=list(
         cat("---\n")
         cat(format_public_methods(self))
         invisible(self)
+    }
+),
+
+private=list(
+
+    rm_op=function(op="", ...)
+    {
+        call_azure_rm(self$token, self$id, op, ...)
     }
 ))
 
