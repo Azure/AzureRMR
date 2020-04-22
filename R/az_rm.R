@@ -148,9 +148,12 @@ public=list(
 
 private=list(
 
-    rm_op=function(op="", ...)
+    rm_op=function(op="", options=list(), ..., api_version=getOption("azure_api_version"))
     {
-        call_azure_rm(self$token, self$id, op, ...)
+        url <- find_resource_host(self$token)
+        url$path <- op
+        url$query <- modifyList(list(`api-version`=api_version), options)
+        call_azure_url(self$token, url, ...)
     }
 ))
 
