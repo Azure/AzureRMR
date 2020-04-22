@@ -59,3 +59,10 @@ test_that("Graph interop works",
     gr <- AzureGraph::get_graph_login(tenant)
     expect_is(gr, "ms_graph")
 })
+
+test_that("Top-level do_operation works",
+{
+    az <- get_azure_login(tenant)
+    out <- az$do_operation("providers/Microsoft.Management/operations", api_version="2020-02-01")
+    expect_is(out, "list")
+})
