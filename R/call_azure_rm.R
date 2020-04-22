@@ -30,7 +30,9 @@ call_azure_rm <- function(token, subscription, operation, ...,
                           api_version=getOption("azure_api_version"))
 {
     url <- find_resource_host(token)
-    url$path <- construct_path("subscriptions", subscription, operation)
+    url$path <- if(!missing(subscription) && !is.null(subscription))
+        construct_path("subscriptions", subscription, operation)
+    else operation
     url$query <- modifyList(list(`api-version`=api_version), options)
 
     call_azure_url(token, url, ...)
