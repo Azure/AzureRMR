@@ -8,9 +8,9 @@ test_that("Background process pool works",
     expect_error(AzureRMR:::pool_check())
     expect_error(pool_sapply(1:5, function(x) x))
 
-    init_pool(5)
+    init_pool(2)
     expect_true(pool_exists())
-    expect_identical(pool_size(), 5L)
+    expect_identical(pool_size(), 2L)
 
     res <- pool_sapply(1:5, function(x) x)
     expect_identical(res, 1:5)
@@ -27,7 +27,7 @@ test_that("Background process pool works",
     res <- pool_sapply(1:5, function(x) y)
     expect_identical(res, rep(42, 5))
 
-    init_pool(5)
+    init_pool(2)
     expect_true(all(sapply(pool_evalq(ls()), is_empty)))
     expect_error(pool_sapply(1:5, function(x) y))
 
