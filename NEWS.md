@@ -1,3 +1,7 @@
+# AzureRMR 2.3.2
+
+- Add `do_operation` method for the Resource Manager login client, allowing arbitrary operations at the top-level scope.
+
 # AzureRMR 2.3.1
 
 - Update Resource Manager API version to "2019-10-01".
