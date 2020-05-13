@@ -17,8 +17,8 @@ rg <- az_rm$
 
 test_that("Resource methods work",
 {
-    restype <- "Microsoft.Storage/storageAccounts"
     # storage account resource
+    restype <- "Microsoft.Storage/storageAccounts"
     resname <- paste(sample(letters, 20, replace=TRUE), collapse="")
 
     expect_false(rg$resource_exists(type="foo/bar", name="randomname"))
@@ -76,6 +76,31 @@ test_that("Resource methods work",
         properties=list(isHnsEnabled=TRUE),
         wait=TRUE)
     expect_true(is(res2, "az_resource") && !is_empty(res2$properties))
+})
+
+test_that("Extended resource fields works",
+{
+    # managed disk resource
+    restype <- "Microsoft.Compute/disks"
+    resname <- paste(sample(letters, 20, replace=TRUE), collapse="")
+
+    res <- rg$create_resource(type=restype, name=resname,
+        properties=list(
+            creationData=list(createOption="empty"),
+            diskSizeGB=500,
+            osType=""
+        ),
+        sku=list(name="Standard_LRS"),
+        zones=list(1)
+    )
+
+    expect_true(rg$resource_exists(type=restype, name=resname))
+    expect_is(res, "az_resource")
+
+    expect_false(is_empty(res$ext))
+
+    reslst <- rg$list_resources()
+    expect_true(is.list(reslst) && all(sapply(reslst, is_resource)))
 })
 
 rg$delete(confirm=FALSE)
