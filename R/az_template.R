@@ -178,7 +178,7 @@ private=list(
 
     init_from_parms=function(parms)
     {
-        private$validate_response_parms(parms)
+        # private$validate_response_parms(parms)
         self$name <- parms$name
         parms
     },
@@ -193,7 +193,7 @@ private=list(
             mode="Incremental"
         )
         properties <- modifyList(default_properties, list(...))
-        private$validate_deploy_parms(properties)
+        # private$validate_deploy_parms(properties)
 
         # rather than working with R objects, convert to JSON and do text munging
         # this allows adding template/params that are already JSON text without conversion roundtrip
@@ -260,19 +260,19 @@ private=list(
         parms
     },
 
-    validate_response_parms=function(parms)
-    {
-        required_names <- c("name")
-        optional_names <- c("id", "properties")
-        validate_object_names(names(parms), required_names, optional_names)
-    },
+    # validate_response_parms=function(parms)
+    # {
+    #     required_names <- c("name")
+    #     optional_names <- c("id", "properties")
+    #     validate_object_names(names(parms), required_names, optional_names)
+    # },
 
-    validate_deploy_parms=function(parms)
-    {
-        required_names <- c("debugSetting", "mode")
-        optional_names <- c("onErrorDeployment")
-        validate_object_names(names(parms), required_names, optional_names)
-    },
+    # validate_deploy_parms=function(parms)
+    # {
+    #     required_names <- c("debugSetting", "mode")
+    #     optional_names <- c("onErrorDeployment")
+    #     validate_object_names(names(parms), required_names, optional_names)
+    # },
 
     # delete resources that were created (which may not be the same as resources that are required)
     free_resources=function()

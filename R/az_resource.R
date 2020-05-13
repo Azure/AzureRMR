@@ -130,6 +130,7 @@ public=list(
     tags=NULL,
     token=NULL,
     etag=NULL,
+    ext=list(),
 
     # constructor overloads:
     # 1. deploy resource: resgroup, {provider, path}|type, name, ...
@@ -163,6 +164,7 @@ public=list(
         self$sku <- parms$sku
         self$tags <- parms$tags
         self$etag <- parms$etag
+        self$ext <- get_extended_resource_fields(parms)
 
         NULL
     },
@@ -240,9 +242,9 @@ public=list(
     update=function(..., options=list())
     {
         parms <- list(...)
-        private$validate_update_parms(names(parms))
+        # private$validate_update_parms(names(parms))
         private$res_op(
-            body=jsonlite::toJSON(parms, auto_unbox=TRUE, digits=22),
+            body=jsonlite::toJSON(parms, auto_unbox=TRUE, digits=22, null="null"),
             options=options,
             encode="raw",
             http_verb="PATCH"
@@ -326,8 +328,8 @@ private=list(
     init_from_parms=function(parms)
     {
         # allow list(NULL) as special case for creating an empty object
-        if(!identical(parms, list(NULL)))
-            private$validate_response_parms(parms)
+        # if(!identical(parms, list(NULL)))
+        #     private$validate_response_parms(parms)
         parms
     },
 
@@ -344,7 +346,7 @@ private=list(
         if(length(properties) == 1 && is.character(properties[[1]]) && jsonlite::validate(properties[[1]]))
             properties <- jsonlite::fromJSON(properties[[1]], simplifyVector=FALSE)
 
-        private$validate_deploy_parms(properties)
+        # private$validate_deploy_parms(properties)
         private$res_op(body=properties, encode="json", http_verb="PUT")
 
         # do we wait until resource has finished provisioning?
@@ -379,29 +381,29 @@ private=list(
         }
     },
 
-    validate_deploy_parms=function(parms)
-    {
-        required_names <- character(0)
-        optional_names <-
-            c("identity", "kind", "location", "managedBy", "plan", "properties", "sku", "tags", "etag")
-        validate_object_names(names(parms), required_names, optional_names)
-    },
+    # validate_deploy_parms=function(parms)
+    # {
+    #     required_names <- character(0)
+    #     optional_names <-
+    #         c("identity", "kind", "location", "managedBy", "plan", "properties", "sku", "tags", "etag")
+    #     validate_object_names(names(parms), required_names, optional_names)
+    # },
 
-    validate_response_parms=function(parms)
-    {
-        required_names <- c("id", "name", "type")
-        optional_names <-
-            c("identity", "kind", "location", "managedBy", "plan", "properties", "sku", "tags", "etag")
-        validate_object_names(names(parms), required_names, optional_names)
-    },
+    # validate_response_parms=function(parms)
+    # {
+    #     required_names <- c("id", "name", "type")
+    #     optional_names <-
+    #         c("identity", "kind", "location", "managedBy", "plan", "properties", "sku", "tags", "etag")
+    #     validate_object_names(names(parms), required_names, optional_names)
+    # },
 
-    validate_update_parms=function(parms)
-    {
-        required_names <- character(0)
-        optional_names <-
-            c("identity", "kind", "location", "managedBy", "plan", "properties", "sku", "tags", "etag")
-        validate_object_names(names(parms), required_names, optional_names)
-    },
+    # validate_update_parms=function(parms)
+    # {
+    #     required_names <- character(0)
+    #     optional_names <-
+    #         c("identity", "kind", "location", "managedBy", "plan", "properties", "sku", "tags", "etag")
+    #     validate_object_names(names(parms), required_names, optional_names)
+    # },
 
     res_op=function(op="", ..., api_version=private$api_version)
     {
@@ -413,3 +415,12 @@ private=list(
         call_azure_rm(self$token, self$subscription, op, ..., api_version=api_version)
     }
 ))
+
+
+get_extended_resource_fields <- function(res_fields)
+{
+    known_fields <- c("id", "name", "type", "identity", "kind", "location", "managedBy",
+                      "plan", "properties", "sku", "tags", "etag")
+    nms <- names(res_fields)
+    res_fields[!(nms %in% known_fields)]
+}

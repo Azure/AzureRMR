@@ -78,12 +78,12 @@ get_paged_list <- function(lst, token, next_link_name="nextLink", value_name="va
 
 
 # check that 1) all required names are present; 2) optional names may be present; 3) no other names are present
-validate_object_names <- function(x, required, optional=character(0))
-{
-    valid <- all(required %in% x) && all(x %in% c(required, optional))
-    if(!valid)
-        stop("Invalid object names")
-}
+# validate_object_names <- function(x, required, optional=character(0))
+# {
+#     valid <- all(required %in% x) && all(x %in% c(required, optional))
+#     if(!valid)
+#         stop("Invalid object names")
+# }
 
 
 # handle different behaviour of file_path on Windows/Linux wrt trailing /

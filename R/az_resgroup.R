@@ -302,7 +302,7 @@ private=list(
         }
         else
         {
-            private$validate_parms(parms)
+            # private$validate_parms(parms)
             self$name <- parms$name
         }
         parms
@@ -311,17 +311,17 @@ private=list(
     init_and_create=function(name, ...)
     {
         parms <- modifyList(list(...), list(name=name))
-        private$validate_parms(parms)
+        # private$validate_parms(parms)
         self$name <- name
         private$rg_op(body=parms, encode="json", http_verb="PUT")
     },
 
-    validate_parms=function(parms)
-    {
-        required_names <- c("location", "name")
-        optional_names <- c("id", "managedBy", "tags", "properties", "type")
-        validate_object_names(names(parms), required_names, optional_names)
-    },
+    # validate_parms=function(parms)
+    # {
+    #     required_names <- c("location", "name")
+    #     optional_names <- c("id", "managedBy", "tags", "properties", "type")
+    #     validate_object_names(names(parms), required_names, optional_names)
+    # },
 
     rg_op=function(op="", ...)
     {
