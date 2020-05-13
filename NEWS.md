@@ -1,3 +1,7 @@
+# AzureRMR 2.3.2.9000
+
+- Allow for extra resource type-specific fields beyond those mentioned in the Resource Manager documentation. In particular, virtual machines and managed disks may have a `zones` field giving the availability zone.
+
 # AzureRMR 2.3.2
 
 - Add `do_operation` method for the Resource Manager login client, allowing arbitrary operations at the top-level scope.
