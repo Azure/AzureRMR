@@ -118,5 +118,7 @@ delete_confirmed <- function(confirm, name, type, quote_name=TRUE)
 # add a tag on objects created by this package
 add_creator_tag <- function(tags)
 {
+    if(!is.list(tags))
+        tags <- list()
     utils::modifyList(tags, list(createdBy="AzureR/AzureRMR"))
 }
