@@ -120,5 +120,5 @@ add_creator_tag <- function(tags)
 {
     if(!is.list(tags))
         tags <- list()
-    utils::modifyList(tags, list(createdBy="AzureR/AzureRMR"))
+    utils::modifyList(list(createdBy="AzureR/AzureRMR"), tags)
 }
