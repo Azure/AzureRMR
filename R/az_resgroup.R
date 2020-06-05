@@ -311,6 +311,7 @@ private=list(
     init_and_create=function(name, ...)
     {
         parms <- modifyList(list(...), list(name=name))
+        parms$tags <- add_creator_tag(parms$tags)
         # private$validate_parms(parms)
         self$name <- name
         private$rg_op(body=parms, encode="json", http_verb="PUT")

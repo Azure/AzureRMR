@@ -347,6 +347,7 @@ private=list(
             properties <- jsonlite::fromJSON(properties[[1]], simplifyVector=FALSE)
 
         # private$validate_deploy_parms(properties)
+        properties$tags <- add_creator_tag(properties$tags)
         private$res_op(body=properties, encode="json", http_verb="PUT")
 
         # do we wait until resource has finished provisioning?

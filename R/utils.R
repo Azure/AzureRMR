@@ -113,3 +113,10 @@ delete_confirmed <- function(confirm, name, type, quote_name=TRUE)
     else utils::askYesNo(msg, FALSE)
     isTRUE(ok)
 }
+
+
+# add a tag on objects created by this package
+add_creator_tag <- function(tags)
+{
+    utils::modifyList(tags, list(createdBy="AzureR/AzureRMR"))
+}

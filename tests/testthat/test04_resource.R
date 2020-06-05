@@ -46,11 +46,11 @@ test_that("Resource methods work",
 
     # tagging
     res$set_tags(tag1="value1")
-    expect_identical(res$get_tags(), list(tag1="value1"))
+    expect_identical(res$get_tags(), list(createdBy="AzureR/AzureRMR", tag1="value1"))
     res$set_tags(tag2)
-    expect_identical(res$get_tags(), list(tag1="value1", tag2=""))
+    expect_identical(res$get_tags(), list(createdBy="AzureR/AzureRMR", tag1="value1", tag2=""))
     res$set_tags(tag2=NULL)
-    expect_identical(res$get_tags(), list(tag1="value1"))
+    expect_identical(res$get_tags(), list(createdBy="AzureR/AzureRMR", tag1="value1"))
     res$set_tags(keep_existing=FALSE)
     expect_true(is_empty(res$get_tags()))
 
