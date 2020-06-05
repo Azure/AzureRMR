@@ -225,8 +225,9 @@ private=list(
         else append_json(properties, parameters=parameters)
 
         self$name <- name
+        tags <- jsonlite::toJSON(list(createdBy="AzureR/AzureRMR"), auto_unbox=TRUE)
         parms <- private$tpl_op(
-            body=jsonlite::prettify(sprintf('{"properties": %s}', properties)),
+            body=jsonlite::prettify(sprintf('{"properties": %s, "tags": %s}', properties, tags)),
             encode="raw",
             http_verb="PUT"
         )
