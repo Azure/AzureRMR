@@ -9,6 +9,7 @@
 #' - `cancel(free_resources=FALSE)`: Cancel an in-progress deployment. Optionally free any resources that have already been created.
 #' - `delete(confirm=TRUE, free_resources=FALSE)`: Delete a deployed template, after a confirmation check. Optionally free any resources that were created. If the template was deployed in Complete mode (its resource group is exclusive to its use), the latter process will delete the entire resource group. Otherwise resources are deleted in the order given by the template's output resources list; in this case, some may be left behind if the ordering is incompatible with dependencies.
 #' - `list_resources()`: Returns a list of Azure resource objects that were created by the template. This returns top-level resources only, not those that represent functionality provided by another resource.
+#' - `get_tags()`: Returns the tags for the deployment template (note: this is not the same as the tags applied to resources that are deployed).
 #'
 #' @section Initialization:
 #' Initializing a new object of this class can either retrieve an existing template, or deploy a new template on the host. Generally, the easiest way to create a template object is via the `get_template`, `deploy_template` or `list_templates` methods of the [az_resource_group] class, which handle the details automatically.
@@ -64,6 +65,7 @@ public=list(
     id=NULL,
     name=NULL,
     properties=NULL,
+    tags=NULL,
     token=NULL,
 
     # constructor overloads: 1) get an existing template from host; 2) from passed-in data; 3) deploy new template
@@ -84,6 +86,7 @@ public=list(
 
         self$id <- parms$id
         self$properties <- parms$properties
+        self$tags <- parms$tags
         NULL
     },
 
@@ -157,6 +160,11 @@ public=list(
         })
         nulls <- sapply(outlst, is.null)
         named_list(outlst[!nulls], c("type", "name"))
+    },
+
+    get_tags=function()
+    {
+        self$tags
     },
 
     print=function(...)

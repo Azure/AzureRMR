@@ -9,7 +9,7 @@
 #' - `new(token, id, ...)`: Initialize a subscription object.
 #' - `list_resource_groups()`: Return a list of resource group objects for this subscription.
 #' - `get_resource_group(name)`: Return an object representing an existing resource group.
-#' - `create_resource_group(name, location)`: Create a new resource group in the specified region/location, and return an object representing it.
+#' - `create_resource_group(name, location)`: Create a new resource group in the specified region/location, and return an object representing it. By default, AzureRMR will set the `createdBy` tag on a newly-created resource group to the value `AzureR/AzureRMR`.
 #' - `delete_resource_group(name, confirm=TRUE)`: Delete a resource group, after asking for confirmation.
 #' - `resource_group_exists(name)`: Check if a resource group exists.
 #' - `list_resources()`: List all resources deployed under this subscription.

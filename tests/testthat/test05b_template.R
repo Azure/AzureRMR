@@ -72,6 +72,9 @@ test_that("Template methods work",
     tpl4 <- rg$deploy_template(tplname4, template=tpl_def,  parameters=par_def, wait=TRUE)
     tpl4$check()
     expect_is(tpl4, "az_template")
+
+    # tagging
+    expect_identical(tpl4$get_tags(), list(createdBy="AzureR/AzureRMR"))
 })
 
 rg$delete(confirm=FALSE)

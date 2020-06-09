@@ -9,16 +9,16 @@
 #' - `sync_fields()`: Synchronise the R object with the resource group it represents in Azure.
 #' - `list_templates()`: List deployed templates in this resource group.
 #' - `get_template(name)`: Return an object representing an existing template.
-#' - `deploy_template(...)`: Deploy a new template. See 'Templates' for more details.
+#' - `deploy_template(...)`: Deploy a new template. See 'Templates' for more details. By default, AzureRMR will set the `createdBy` tag on a newly-deployed template to the value `AzureR/AzureRMR`.
 #' - `delete_template(name, confirm=TRUE, free_resources=FALSE)`: Delete a deployed template, and optionally free any resources that were created.
 #' - `get_resource(...)`: Return an object representing an existing resource. See 'Resources' for more details.
-#' - `create_resource(...)`: Create a new resource.
+#' - `create_resource(...)`: Create a new resource. By default, AzureRMR will set the `createdBy` tag on a newly-created resource to the value `AzureR/AzureRMR`.
 #' - `delete_resource(..., confirm=TRUE, wait=FALSE)`: Delete an existing resource. Optionally wait for the delete to finish.
 #' - `resource_exists(...)`: Check if a resource exists.
 #' - `list_resources()`: Return a list of resource group objects for this subscription.
 #' - `do_operation(...)`: Carry out an operation. See 'Operations' for more details.
 #' - `set_tags(..., keep_existing=TRUE)`: Set the tags on this resource group. The tags can be either names or name-value pairs. To delete a tag, set it to `NULL`.
-#' - `get_tags()`: Get the tags on this resource.
+#' - `get_tags()`: Get the tags on this resource group.
 #' - `create_lock(name, level)`: Create a management lock on this resource group (which will propagate to all resources within it).
 #' - `get_lock(name)`: Returns a management lock object.
 #' - `delete_lock(name)`: Deletes a management lock object.

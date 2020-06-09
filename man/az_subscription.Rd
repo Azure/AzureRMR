@@ -16,7 +16,7 @@ Class representing an Azure subscription.
 \item \code{new(token, id, ...)}: Initialize a subscription object.
 \item \code{list_resource_groups()}: Return a list of resource group objects for this subscription.
 \item \code{get_resource_group(name)}: Return an object representing an existing resource group.
-\item \code{create_resource_group(name, location)}: Create a new resource group in the specified region/location, and return an object representing it.
+\item \code{create_resource_group(name, location)}: Create a new resource group in the specified region/location, and return an object representing it. By default, AzureRMR will set the \code{createdBy} tag on a newly-created resource group to the value \code{AzureR/AzureRMR}.
 \item \code{delete_resource_group(name, confirm=TRUE)}: Delete a resource group, after asking for confirmation.
 \item \code{resource_group_exists(name)}: Check if a resource group exists.
 \item \code{list_resources()}: List all resources deployed under this subscription.

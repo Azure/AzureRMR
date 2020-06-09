@@ -18,16 +18,16 @@ Class representing an Azure resource group.
 \item \code{sync_fields()}: Synchronise the R object with the resource group it represents in Azure.
 \item \code{list_templates()}: List deployed templates in this resource group.
 \item \code{get_template(name)}: Return an object representing an existing template.
-\item \code{deploy_template(...)}: Deploy a new template. See 'Templates' for more details.
+\item \code{deploy_template(...)}: Deploy a new template. See 'Templates' for more details. By default, AzureRMR will set the \code{createdBy} tag on a newly-deployed template to the value \code{AzureR/AzureRMR}.
 \item \code{delete_template(name, confirm=TRUE, free_resources=FALSE)}: Delete a deployed template, and optionally free any resources that were created.
 \item \code{get_resource(...)}: Return an object representing an existing resource. See 'Resources' for more details.
-\item \code{create_resource(...)}: Create a new resource.
+\item \code{create_resource(...)}: Create a new resource. By default, AzureRMR will set the \code{createdBy} tag on a newly-created resource to the value \code{AzureR/AzureRMR}.
 \item \code{delete_resource(..., confirm=TRUE, wait=FALSE)}: Delete an existing resource. Optionally wait for the delete to finish.
 \item \code{resource_exists(...)}: Check if a resource exists.
 \item \code{list_resources()}: Return a list of resource group objects for this subscription.
 \item \code{do_operation(...)}: Carry out an operation. See 'Operations' for more details.
 \item \code{set_tags(..., keep_existing=TRUE)}: Set the tags on this resource group. The tags can be either names or name-value pairs. To delete a tag, set it to \code{NULL}.
-\item \code{get_tags()}: Get the tags on this resource.
+\item \code{get_tags()}: Get the tags on this resource group.
 \item \code{create_lock(name, level)}: Create a management lock on this resource group (which will propagate to all resources within it).
 \item \code{get_lock(name)}: Returns a management lock object.
 \item \code{delete_lock(name)}: Deletes a management lock object.
