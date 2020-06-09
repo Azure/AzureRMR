@@ -1,6 +1,7 @@
 # AzureRMR 2.3.3.9000
 
 - Add `createdBy:AzureR/AzureRMR` tag to Azure objects (resource groups, resources and templates) created by this package.
+- Add a `get_tags()` method for templates.
 
 # AzureRMR 2.3.3
 
