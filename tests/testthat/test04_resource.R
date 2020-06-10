@@ -64,10 +64,6 @@ test_that("Resource methods work",
     expect_null(res$delete_lock("newlock_res"))
     expect_error(res$get_lock("newlock_res"))
 
-    # deletion
-    expect_null(rg$delete_resource(type=restype, name=resname, confirm=FALSE, wait=TRUE))
-    expect_false(rg$resource_exists(type=restype, name=resname))
-
     # wait arg
     resname2 <- paste(sample(letters, 20, replace=TRUE), collapse="")
     res2 <- rg$create_resource(type=restype, name=resname2,
@@ -101,6 +97,33 @@ test_that("Extended resource fields works",
 
     reslst <- rg$list_resources()
     expect_true(is.list(reslst) && all(sapply(reslst, is_resource)))
+})
+
+test_that("List filters work",
+{
+    reslst0 <- rg$list_resources()
+    expect_true(length(reslst0) > 1)
+
+    reslst <- rg$list_resources(top=1)
+    expect_true(is.list(reslst) && length(reslst) == 1)
+
+    reslst <- rg$list_resources(filter="tagName eq 'createdBy' and tagValue eq 'AzureR/AzureRMR'")
+    expect_true(is.list(reslst) && all(sapply(reslst, is_resource)))
+
+    reslst <- rg$list_resources(filter="resourceType eq 'Microsoft.Storage/storageAccounts'", expand="createdTime")
+    expect_true(is.list(reslst))
+    expect_true(all(sapply(reslst,
+        function(r) is_resource(r) && r$type == "Microsoft.Storage/storageAccounts" && !is_empty(r$ext$createdTime))))
+})
+
+test_that("Resource deletion works",
+{
+    reslst <- rg$list_resources()
+    restype <- reslst[[1]]$type
+    resname <- reslst[[1]]$name
+
+    expect_null(rg$delete_resource(type=restype, name=resname, confirm=FALSE, wait=TRUE))
+    expect_false(rg$resource_exists(type=restype, name=resname))
 })
 
 rg$delete(confirm=FALSE)

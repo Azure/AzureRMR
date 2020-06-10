@@ -47,6 +47,26 @@ test_that("Subscription methods work",
     expect_true(is.list(res))
 })
 
+test_that("List filters work",
+{
+    az <- az_rm$new(tenant=tenant, app=app, password=password)
+    sub <- az$get_subscription(subscription)
+
+    # assume there are 2 or more resource groups
+    rgs <- sub$list_resource_groups(top=1)
+    expect_true(is.list(rgs) && all(sapply(rgs, is_resource_group)) && length(rgs) == 1)
+
+    # assume there is a resource group with this tag
+    rgs <- sub$list_resource_groups(filter="tagName eq 'createdBy' and tagValue eq 'AzureR/AzureRMR'")
+    expect_true(is.list(rgs) && all(sapply(rgs, is_resource_group)))
+
+    # assume there is a resource of this type
+    res <- sub$list_resources(filter="resourceType eq 'Microsoft.Storage/storageAccounts'", expand="createdTime")
+    expect_true(is.list(res))
+    expect_true(all(sapply(res,
+        function(r) is_resource(r) && r$type == "Microsoft.Storage/storageAccounts" && !is_empty(r$ext$createdTime))))
+})
+
 test_that("Subscription methods work with AAD v2.0",
 {
     token <- get_azure_token(c("https://management.azure.com/.default", "offline_access"),

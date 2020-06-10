@@ -14,12 +14,12 @@ Class representing an Azure subscription.
 
 \itemize{
 \item \code{new(token, id, ...)}: Initialize a subscription object.
-\item \code{list_resource_groups(filter, top)}: Return a list of resource group objects for this subscription. \code{filter} and \code{top} are optional arguments to filter the results; see the \href{https://docs.microsoft.com/en-us/rest/api/resources/resourcegroups/list}{Azure documentation} for more details.
+\item \code{list_resource_groups(filter, top)}: Return a list of resource group objects for this subscription. \code{filter} and \code{top} are optional arguments to filter the results; see the \href{https://docs.microsoft.com/en-us/rest/api/resources/resourcegroups/list}{Azure documentation} for more details. If \code{top} is specified, the returned list will have a maximum of this many items.
 \item \code{get_resource_group(name)}: Return an object representing an existing resource group.
 \item \code{create_resource_group(name, location)}: Create a new resource group in the specified region/location, and return an object representing it. By default, AzureRMR will set the \code{createdBy} tag on a newly-created resource group to the value \code{AzureR/AzureRMR}.
 \item \code{delete_resource_group(name, confirm=TRUE)}: Delete a resource group, after asking for confirmation.
 \item \code{resource_group_exists(name)}: Check if a resource group exists.
-\item \code{list_resources(filter, expand, top)}: List all resources deployed under this subscription. \code{filter}, \code{expand} and \code{top} are optional arguments to filter the results; see the \href{https://docs.microsoft.com/en-us/rest/api/resources/resources/list}{Azure documentation} for more details.
+\item \code{list_resources(filter, expand, top)}: List all resources deployed under this subscription. \code{filter}, \code{expand} and \code{top} are optional arguments to filter the results; see the \href{https://docs.microsoft.com/en-us/rest/api/resources/resources/list}{Azure documentation} for more details. If \code{top} is specified, the returned list will have a maximum of this many items.
 \item \code{list_locations()}: List locations available.
 \item \code{get_provider_api_version(provider, type, which=1, stable_only=TRUE)}: Get the current API version for the given resource provider and type. If no resource type is supplied, returns a vector of API versions, one for each resource type for the given provider. If neither provider nor type is supplied, returns the API versions for all resources and providers. Set \code{stable_only=FALSE} to allow preview APIs to be returned. Set \code{which} to a number > 1 to return an API other than the most recent.
 \item \code{do_operation(...)}: Carry out an operation. See 'Operations' for more details.

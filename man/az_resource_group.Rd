@@ -16,7 +16,7 @@ Class representing an Azure resource group.
 \item \code{new(token, subscription, id, ...)}: Initialize a resource group object. See 'Initialization' for more details.
 \item \code{delete(confirm=TRUE)}: Delete this resource group, after a confirmation check. This is asynchronous: while the method returns immediately, the delete operation continues on the host in the background. For resource groups containing a large number of deployed resources, this may take some time to complete.
 \item \code{sync_fields()}: Synchronise the R object with the resource group it represents in Azure.
-\item \code{list_templates(filter, top)}: List deployed templates in this resource group. \code{filter} and \code{top} are optional arguments to filter the results; see the \href{https://docs.microsoft.com/en-us/rest/api/resources/deployments/listbyresourcegroup}{Azure documentation} for more details.
+\item \code{list_templates(filter, top)}: List deployed templates in this resource group. \code{filter} and \code{top} are optional arguments to filter the results; see the \href{https://docs.microsoft.com/en-us/rest/api/resources/deployments/listbyresourcegroup}{Azure documentation} for more details. If \code{top} is specified, the returned list will have a maximum of this many items.
 \item \code{get_template(name)}: Return an object representing an existing template.
 \item \code{deploy_template(...)}: Deploy a new template. See 'Templates' for more details. By default, AzureRMR will set the \code{createdBy} tag on a newly-deployed template to the value \code{AzureR/AzureRMR}.
 \item \code{delete_template(name, confirm=TRUE, free_resources=FALSE)}: Delete a deployed template, and optionally free any resources that were created.
@@ -24,7 +24,7 @@ Class representing an Azure resource group.
 \item \code{create_resource(...)}: Create a new resource. By default, AzureRMR will set the \code{createdBy} tag on a newly-created resource to the value \code{AzureR/AzureRMR}.
 \item \code{delete_resource(..., confirm=TRUE, wait=FALSE)}: Delete an existing resource. Optionally wait for the delete to finish.
 \item \code{resource_exists(...)}: Check if a resource exists.
-\item \code{list_resources(filter, expand, top)}: Return a list of resource group objects for this subscription. \code{filter}, \code{expand} and \code{top} are optional arguments to filter the results; see the \href{https://docs.microsoft.com/en-us/rest/api/resources/resources/list}{Azure documentation} for more details.
+\item \code{list_resources(filter, expand, top)}: Return a list of resource group objects for this subscription. \code{filter}, \code{expand} and \code{top} are optional arguments to filter the results; see the \href{https://docs.microsoft.com/en-us/rest/api/resources/resources/list}{Azure documentation} for more details. If \code{top} is specified, the returned list will have a maximum of this many items.
 \item \code{do_operation(...)}: Carry out an operation. See 'Operations' for more details.
 \item \code{set_tags(..., keep_existing=TRUE)}: Set the tags on this resource group. The tags can be either names or name-value pairs. To delete a tag, set it to \code{NULL}.
 \item \code{get_tags()}: Get the tags on this resource group.
