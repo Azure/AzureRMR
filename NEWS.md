@@ -1,3 +1,7 @@
+# AzureRMR 2.3.4.9000
+
+- Fix a bug in printing the error message when a template deployment fails.
+
 # AzureRMR 2.3.4
 
 - Add filtering arguments (`filter`, `expand` and `top`) for the `list_resource_groups`, `list_templates` and `list_resources` methods, to trim the results. See the Azure docs for more details.
