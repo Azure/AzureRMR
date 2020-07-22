@@ -259,8 +259,7 @@ private=list(
             {
                 err_details <- lapply(parms$properties$error$details, `[[`, "message")
                 msg <- if(is.list(err_details) && !is_empty(err_details))
-                    paste0("\nUnable to deploy template. Message(s):\n",
-                          do.call(paste, c(err_details, sep="\n")))
+                    paste0("\nUnable to deploy template. Message(s):\n", do.call(paste, c(err_details, sep="\n")))
                 else "\nUnable to deploy template"
                 stop(msg, call.=FALSE)
             }

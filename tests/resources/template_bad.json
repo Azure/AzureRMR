@@ -1,0 +1,30 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "name": "azurermrtestbad1",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-07-01",
+            "location": "westus",
+            "sku": {
+                "name": "bad_error"
+            },
+            "kind": "Storage"
+        },
+        {
+            "name": "azurermrtestbad2",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-07-01",
+            "location": "westus",
+            "sku": {
+                "name": "bad_error"
+            },
+            "kind": "Storage"
+        }
+    ],
+    "outputs": {}
+}
+

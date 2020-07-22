@@ -87,4 +87,11 @@ test_that("Template methods work",
     expect_true(is.list(tpllst) && length(tpllst) > 0)
 })
 
+test_that("Bad templates fail gracefully",
+{
+    tplname <- paste(sample(letters, 10, replace=TRUE), collapse="")
+    template <- "../resources/template_bad.json"
+    expect_error(rg$deploy_template(tplname, template=template, wait=TRUE), "Unable to deploy template")
+})
+
 rg$delete(confirm=FALSE)

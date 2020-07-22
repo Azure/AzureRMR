@@ -103,7 +103,7 @@ test_that("Extended resource fields works",
 
 test_that("List filters work",
 {
-    Sys.sleep(5)  # let Azure catch up
+    Sys.sleep(10)  # let Azure catch up
     reslst0 <- rg$list_resources()
     expect_identical(length(reslst0), 3L)
 
