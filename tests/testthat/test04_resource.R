@@ -26,7 +26,8 @@ test_that("Resource methods work",
 
     res <- rg$create_resource(type=restype, name=resname,
         kind="Storage",
-        sku=list(name="Standard_LRS", tier="Standard"))
+        sku=list(name="Standard_LRS", tier="Standard"),
+        wait=TRUE)
 
     expect_true(rg$resource_exists(type=restype, name=resname))
     expect_is(res, "az_resource")
@@ -87,7 +88,8 @@ test_that("Extended resource fields works",
             osType=""
         ),
         sku=list(name="Standard_LRS"),
-        zones=list(1)
+        zones=list(1),
+        wait=TRUE
     )
 
     expect_true(rg$resource_exists(type=restype, name=resname))
@@ -101,8 +103,9 @@ test_that("Extended resource fields works",
 
 test_that("List filters work",
 {
+    Sys.sleep(5)  # let Azure catch up
     reslst0 <- rg$list_resources()
-    expect_true(length(reslst0) > 1)
+    expect_identical(length(reslst0), 3L)
 
     reslst <- rg$list_resources(top=1)
     expect_true(is.list(reslst) && length(reslst) == 1)
