@@ -1,6 +1,6 @@
 [
     {
-        "name": "[parameters('name')]",
+        "name": "[mynamespace.prefixedName(parameters('name'))]",
         "type": "Microsoft.Storage/storageAccounts",
         "apiVersion": "2018-07-01",
         "location": "[parameters('location')]",
@@ -11,6 +11,9 @@
         "sku": {
             "name": "Standard_LRS"
         },
-        "kind": "Storage"
+        "kind": "Storage",
+        "tags": {
+            "tag1": "[mynamespace.prefixedTagValue(parameters('tagvalue'))]"
+        }
     }
 ]

@@ -4,5 +4,8 @@
     },
     "name": {
         "type": "string"
+    },
+    "tagvalue": {
+        "type": "string"
     }
 }

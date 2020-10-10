@@ -25,7 +25,8 @@ test_that("Template methods work",
     template <- "../resources/template.json"
     parameters <- jsonlite::toJSON(list(
         location=list(value="australiaeast"),
-        name=list(value=tplname)
+        name=list(value=tplname),
+        tagvalue=list(value="mytagvalue")
     ), auto_unbox=TRUE)
 
     tpl <- rg$deploy_template(tplname, template=template, parameters=parameters, wait=TRUE)
@@ -40,7 +41,8 @@ test_that("Template methods work",
     tpl_parsed <- jsonlite::fromJSON(template, simplifyVector=FALSE)
     parm_parsed <- list(
         location="australiaeast",
-        name=tplname2
+        name=tplname2,
+        tagvalue="mytagvalue"
     )
 
     tpl2 <- rg$deploy_template(tplname2, template=tpl_parsed, parameters=parm_parsed, wait=TRUE)
@@ -56,6 +58,7 @@ test_that("Template methods work",
     tplname3 <- paste(sample(letters, 10, replace=TRUE), collapse="")
     tpl_parsed$parameters$location$defaultValue <- "australiaeast"
     tpl_parsed$parameters$name$defaultValue <- tplname3
+    tpl_parsed$parameters$tagvalue$defaultValue <- "mytagvalue"
 
     tpl3 <- rg$deploy_template(tplname3, template=tpl_parsed, wait=TRUE)
     tpl3$check()
@@ -66,9 +69,10 @@ test_that("Template methods work",
     tplname4 <- paste(sample(letters, 10, replace=TRUE), collapse="")
     tpl_def <- build_template_definition(
         parameters=file("../resources/parameters.json"),
+        functions=file("../resources/functions.json"),
         resources=file("../resources/resources.json")
     )
-    par_def <- build_template_parameters(location="australiaeast", name=tplname4)
+    par_def <- build_template_parameters(location="australiaeast", name=tplname4, tagvalue="mytagvalue")
     tpl4 <- rg$deploy_template(tplname4, template=tpl_def,  parameters=par_def, wait=TRUE)
     tpl4$check()
     expect_is(tpl4, "az_template")

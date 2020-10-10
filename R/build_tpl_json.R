@@ -3,6 +3,7 @@
 #' @param ... For `build_template_parameters`, named arguments giving the values of each template parameter. For `build_template_definition`, further arguments passed to class methods.
 #' @param parameters For `build_template_definition`, the parameter names and types for the template. See 'Details' below.
 #' @param variables Internal variables used by the template.
+#' @param functions User-defined functions used by the template.
 #' @param resources List of resources that the template should deploy.
 #' @param outputs The template outputs.
 #'
@@ -116,14 +117,29 @@ build_template_definition <- function(...)
 
 #' @rdname build_template
 #' @export
-build_template_definition.default <- function(parameters=NULL, variables=NULL, resources=NULL, outputs=NULL, ...)
+build_template_definition.default <- function(
+    parameters=named_list(), variables=named_list(), functions=list(), resources=list(), outputs=named_list(),
+    schema="https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    content_version="1.0.0.0",
+    api_profile=NULL,
+    ...)
 {
     # special treatment for parameters arg: convert 'c(name="type")' to 'list(name=list(type="type"))'
     if(is.character(parameters))
         parameters <- sapply(parameters, function(type) list(type=type), simplify=FALSE)
 
     parts <- lapply(
-        list(parameters=parameters, variables=variables, resources=resources, outputs=outputs, ...),
+        list(
+            `$schema`=schema,
+            contentVersion=content_version,
+            apiProfile=api_profile,
+            parameters=parameters,
+            variables=variables,
+            functions=functions,
+            resources=resources,
+            outputs=outputs,
+            ...
+        ),
         function(x)
         {
             if(inherits(x, "connection"))
@@ -131,17 +147,16 @@ build_template_definition.default <- function(parameters=NULL, variables=NULL, r
                 on.exit(close(x))
                 readLines(x)
             }
-            else generate_json(if(is.null(x)) named_list() else x)
+            else generate_json(x)
         }
     )
-    json <- generate_json(list(
-        `$schema`="https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-        contentVersion="1.0.0.0"
-    ))
-    for(i in seq_along(parts))
-        json <- do.call(append_json, c(json, parts[i]))
+    parts <- parts[parts != "null"]
+    # json <- "{}"
+    # for(i in seq_along(parts))
+    #     if(parts[i] != "null")
+    #         json <- do.call(append_json, c(json, parts[i]))
 
-    jsonlite::prettify(json)
+    jsonlite::prettify(do.call(append_json, c(list("{}"), parts)))
 }
 
 

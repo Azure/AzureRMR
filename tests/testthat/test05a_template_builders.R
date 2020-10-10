@@ -3,7 +3,12 @@ context("Template builders")
 
 test_that("Template definition builder works",
 {
-    expect_silent(build_template_definition())
+    expect_silent(tpl0 <- build_template_definition())
+    # make sure test doesn't fail on extraneous newlines at end
+    expect_identical(
+        sub("\n+$", "", unclass(tpl0)),
+        sub("\n+$", "", paste0(readLines("../resources/template_null.json"), collapse="\n"))
+    )
 
     expect_silent(tpl1 <- build_template_definition(parameters=c(parm1="string", parm2="string")))
 
@@ -32,9 +37,13 @@ test_that("Template definition builder works",
 
     expect_silent(tpl6 <- build_template_definition(
         parameters=file("../resources/parameters.json"),
+        functions=file("../resources/functions.json"),
         resources=file("../resources/resources.json")
     ))
-    expect_identical(unclass(tpl6), paste0(readLines("../resources/template.json"), collapse="\n"))
+    expect_identical(
+        sub("\n+$", "", unclass(tpl6)),
+        sub("\n+$", "", paste0(readLines("../resources/template.json"), collapse="\n"))
+    )
 })
 
 
