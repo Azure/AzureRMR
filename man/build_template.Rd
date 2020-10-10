@@ -10,8 +10,11 @@
 \usage{
 build_template_definition(...)
 
-\method{build_template_definition}{default}(parameters = NULL,
-  variables = NULL, resources = NULL, outputs = NULL, ...)
+\method{build_template_definition}{default}(parameters = named_list(),
+  variables = named_list(), functions = list(), resources = list(),
+  outputs = named_list(),
+  schema = "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  content_version = "1.0.0.0", api_profile = NULL, ...)
 
 build_template_parameters(...)
 
@@ -24,9 +27,13 @@ build_template_parameters(...)
 
 \item{variables}{Internal variables used by the template.}
 
+\item{functions}{User-defined functions used by the template.}
+
 \item{resources}{List of resources that the template should deploy.}
 
 \item{outputs}{The template outputs.}
+
+\item{schema, content_version, api_profile}{Less common arguments that can be used to customise the template. See the guide to template syntax on Microsoft Docs, linked below.}
 }
 \value{
 The JSON text for the template definition and its parameters.
@@ -35,7 +42,7 @@ The JSON text for the template definition and its parameters.
 Build the JSON for a template and its parameters
 }
 \details{
-\code{build_template_definition} is used to generate a template from its components. The arguments can be specified in various ways:
+\code{build_template_definition} is used to generate a template from its components. The main arguments are \code{parameters}, \code{variables}, \code{functions}, \code{resources} and \code{outputs}. Each of these can be specified in various ways:
 \itemize{
 \item As character strings containing unparsed JSON text.
 \item As an R list of (nested) objects, which will be converted to JSON via \code{jsonlite::toJSON}.
@@ -59,6 +66,27 @@ build_template_definition(parameters=list(par1=list(type="string")),
 # specifying parameters as a vector
 build_template_definition(parameters=c(par1="string"),
                           resources=list(list(name="resource here")))
+
+# a user-defined function
+build_template_definition(
+    parameters=c(name="string"),
+    functions=list(
+        list(
+            namespace="mynamespace",
+            members=list(
+                prefixedName=list(
+                    parameters=list(
+                        list(name="name", type="string")
+                    ),
+                    output=list(
+                        type="string",
+                        value="[concat('AzureR', parameters('name'))]"
+                    )
+                )
+            )
+        )
+    )
+)
 
 # realistic example: storage account
 build_template_definition(
@@ -133,4 +161,6 @@ build_template_parameters(name="myres_name", complex_type=file("myres_params.jso
 }
 \seealso{
 \link{az_template}, \link[jsonlite:fromJSON]{jsonlite::toJSON}
+
+\href{https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax}{Guide to template syntax}
 }

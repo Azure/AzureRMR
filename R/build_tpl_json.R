@@ -6,9 +6,10 @@
 #' @param functions User-defined functions used by the template.
 #' @param resources List of resources that the template should deploy.
 #' @param outputs The template outputs.
+#' @param schema,content_version,api_profile Less common arguments that can be used to customise the template. See the guide to template syntax on Microsoft Docs, linked below.
 #'
 #' @details
-#' `build_template_definition` is used to generate a template from its components. The arguments can be specified in various ways:
+#' `build_template_definition` is used to generate a template from its components. The main arguments are `parameters`, `variables`, `functions`, `resources` and `outputs`. Each of these can be specified in various ways:
 #' - As character strings containing unparsed JSON text.
 #' - As an R list of (nested) objects, which will be converted to JSON via `jsonlite::toJSON`.
 #' - A connection pointing to a JSON file or object.
@@ -23,6 +24,8 @@
 #'
 #' @seealso
 #' [az_template], [jsonlite::toJSON]
+#'
+#' [Guide to template syntax](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-syntax)
 #' @examples
 #' # dummy example
 #' # note that 'resources' arg should be a _list_ of resources
@@ -35,6 +38,27 @@
 #' # specifying parameters as a vector
 #' build_template_definition(parameters=c(par1="string"),
 #'                           resources=list(list(name="resource here")))
+#'
+#' # a user-defined function
+#' build_template_definition(
+#'     parameters=c(name="string"),
+#'     functions=list(
+#'         list(
+#'             namespace="mynamespace",
+#'             members=list(
+#'                 prefixedName=list(
+#'                     parameters=list(
+#'                         list(name="name", type="string")
+#'                     ),
+#'                     output=list(
+#'                         type="string",
+#'                         value="[concat('AzureR', parameters('name'))]"
+#'                     )
+#'                 )
+#'             )
+#'         )
+#'     )
+#' )
 #'
 #' # realistic example: storage account
 #' build_template_definition(
