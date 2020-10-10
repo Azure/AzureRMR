@@ -1,3 +1,7 @@
+# AzureRMR 2.3.5.9000
+
+- Change maintainer email address.
+
 # AzureRMR 2.3.5
 
 - Fix a bug in printing the error message when a template deployment fails.
