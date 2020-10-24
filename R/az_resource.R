@@ -234,6 +234,33 @@ public=list(
         invisible(NULL)
     },
 
+    get_subresource=function(type, name, id, api_version=NULL)
+    {
+        name <- file.path(self$name, type, name)
+        az_resource$new(self$token, self$subscription,
+                        resource_group=self$resource_group, type=self$type, name=name, id=id,
+                        api_version=api_version)
+    },
+
+    create_subresource=function(type, name, id, location=self$location, ...)
+    {
+        name <- file.path(self$name, type, name)
+        az_resource$new(self$token, self$subscription,
+                        resource_group=self$resource_group, type=self$type, name=name, id=id,
+                        location=location, ...)
+    },
+
+    delete_subresource=function(type, name, id, api_version=NULL, confirm=TRUE, wait=FALSE)
+    {
+        name <- file.path(self$name, type, name)
+        # supply deployed_properties arg to prevent querying host for resource info
+        az_resource$
+            new(self$token, self$subscription, self$resource_group,
+                type=self$type, name=name, id=id,
+                deployed_properties=list(NULL), api_version=api_version)$
+            delete(confirm=confirm, wait=wait)
+    },
+
     do_operation=function(..., options=list(), http_verb="GET")
     {
         private$res_op(..., options=options, http_verb=http_verb)
