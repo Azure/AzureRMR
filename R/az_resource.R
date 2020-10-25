@@ -60,13 +60,13 @@
 #' @section Sub-resources:
 #' Some resource types can have sub-resources: objects exposed by Resource Manager that make up a part of their parent's functionality. For example, a storage account (type `Microsoft.Storage/storageAccounts`) provides the blob storage service, which can be accessed via Resource Manager as a sub-resource of type `Microsoft.Storage/storageAccounts/blobServices/default`.
 #'
-#' To retrieve an existing sub-resource, use the `get_subresource()` method. You do not need to include the parent resource's type and name. For example, if `res` is a resource for a storage account named "mystorageacct", and you want to retrieve the sub-resource for the blob container "myblobs", call
+#' To retrieve an existing sub-resource, use the `get_subresource()` method. You do not need to include the parent resource's type and name. For example, if `res` is a resource for a storage account, and you want to retrieve the sub-resource for the blob container "myblobs", call
 #'
 #' ```
 #' res$get_subresource(type="blobServices/default/containers", name="myblobs")
 #' ```
 #'
-#' Similarly, to create a new subresource, call the `create_subresource()` method using the same naming convention, passing any required properties as named arguments. To delete it, call `delete_subresource()`.
+#' Notice that the storage account's resource type and name are omitted from the `get_subresource` arguments. Similarly, to create a new subresource, call the `create_subresource()` method with the same naming convention, passing any required fields as named arguments; and to delete it, call `delete_subresource()`.
 #'
 #' @section Role-based access control:
 #' AzureRMR implements a subset of the full RBAC functionality within Azure Active Directory. You can retrieve role definitions and add and remove role assignments, at the subscription, resource group and resource levels. See [rbac] for more information.
@@ -120,7 +120,12 @@
 #' # sync with Azure: useful to track resource creation/update status
 #' vm$sync_fields()
 #'
-#' # delete a resource
+#' # subresource: create a public blob container
+#' stor$create_subresource(type="blobservices/default/containers", name="mycontainer",
+#'     properties=list(publicAccess="container"))
+#'
+#' # delete a subresource and resource
+#' stor$delete_subresource(type="blobservices/default/containers", name="mycontainer")
 #' stor$delete()
 #'
 #' }

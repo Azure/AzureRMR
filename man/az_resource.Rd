@@ -82,10 +82,10 @@ Consult the Azure documentation for your resource to find out what operations ar
 
 Some resource types can have sub-resources: objects exposed by Resource Manager that make up a part of their parent's functionality. For example, a storage account (type \code{Microsoft.Storage/storageAccounts}) provides the blob storage service, which can be accessed via Resource Manager as a sub-resource of type \code{Microsoft.Storage/storageAccounts/blobServices/default}.
 
-To retrieve an existing sub-resource, use the \code{get_subresource()} method. You do not need to include the parent resource's type and name. For example, if \code{res} is a resource for a storage account named "mystorageacct", and you want to retrieve the sub-resource for the blob container "myblobs", call\preformatted{res$get_subresource(type="blobServices/default/containers", name="myblobs")
+To retrieve an existing sub-resource, use the \code{get_subresource()} method. You do not need to include the parent resource's type and name. For example, if \code{res} is a resource for a storage account, and you want to retrieve the sub-resource for the blob container "myblobs", call\preformatted{res$get_subresource(type="blobServices/default/containers", name="myblobs")
 }
 
-Similarly, to create a new subresource, call the \code{create_subresource()} method using the same naming convention, passing any required properties as named arguments. To delete it, call \code{delete_subresource()}.
+Notice that the storage account's resource type and name are omitted from the \code{get_subresource} arguments. Similarly, to create a new subresource, call the \code{create_subresource()} method with the same naming convention, passing any required fields as named arguments; and to delete it, call \code{delete_subresource()}.
 }
 
 \section{Role-based access control}{
@@ -134,7 +134,12 @@ vm$do_operation(http_verb="PATCH",
 # sync with Azure: useful to track resource creation/update status
 vm$sync_fields()
 
-# delete a resource
+# subresource: create a public blob container
+stor$create_subresource(type="blobservices/default/containers", name="mycontainer",
+    properties=list(publicAccess="container"))
+
+# delete a subresource and resource
+stor$delete_subresource(type="blobservices/default/containers", name="mycontainer")
 stor$delete()
 
 }
