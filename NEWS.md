@@ -1,3 +1,7 @@
+# AzureRMR 2.3.6.9000
+
+- Add methods to get, create and delete sub-resources of a resource, eg `res$get_subresource(type="subrestype", name="subresname")`. See `az_resource` for more information.
+
 # AzureRMR 2.3.6
 
 - Add ability to specify user-defined functions in `build_template_definition`. Also allow changing the schema, content version and api profile.
