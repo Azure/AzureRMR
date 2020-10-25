@@ -19,6 +19,9 @@ Class representing a generic Azure resource.
 \item \code{sync_fields()}: Synchronise the R object with the resource it represents in Azure. Returns the \code{properties$provisioningState} field, so you can query this programmatically to check if a resource has finished provisioning. Not all resource types require explicit provisioning, in which case this method will return NULL.
 \item \code{set_api_version(api_version, stable_only=TRUE)}: Set the API version to use when interacting with the host. If \code{api_version} is not supplied, use the latest version available, either the latest stable version (if \code{stable_only=TRUE}) or the latest preview version (if \code{stable_only=FALSE}).
 \item \code{get_api_version()}: Get the current API version.
+\item \code{get_subresource(type, name)}: Get a sub-resource of this resource. See 'Sub-resources' below.
+\item \code{create_subresource(type, name, ...)}: Create a sub-resource of this resource.
+\item \code{delete_subresource(type, name, confirm=TRUE)}: Delete a sub-resource of this resource.
 \item \code{do_operation(...)}: Carry out an operation. See 'Operations' for more details.
 \item \code{set_tags(..., keep_existing=TRUE)}: Set the tags on this resource. The tags can be either names or name-value pairs. To delete a tag, set it to \code{NULL}.
 \item \code{get_tags()}: Get the tags on this resource.
@@ -73,6 +76,16 @@ The \code{do_operation()} method allows you to carry out arbitrary operations on
 }
 
 Consult the Azure documentation for your resource to find out what operations are supported.
+}
+
+\section{Sub-resources}{
+
+Some resource types can have sub-resources: objects exposed by Resource Manager that make up a part of their parent's functionality. For example, a storage account (type \code{Microsoft.Storage/storageAccounts}) provides the blob storage service, which can be accessed via Resource Manager as a sub-resource of type \code{Microsoft.Storage/storageAccounts/blobServices/default}.
+
+To retrieve an existing sub-resource, use the \code{get_subresource()} method. You do not need to include the parent resource's type and name. For example, if \code{res} is a resource for a storage account named "mystorageacct", and you want to retrieve the sub-resource for the blob container "myblobs", call\preformatted{res$get_subresource(type="blobServices/default/containers", name="myblobs")
+}
+
+Similarly, to create a new subresource, call the \code{create_subresource()} method using the same naming convention, passing any required properties as named arguments. To delete it, call \code{delete_subresource()}.
 }
 
 \section{Role-based access control}{
