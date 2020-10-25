@@ -120,11 +120,11 @@
 #' # sync with Azure: useful to track resource creation/update status
 #' vm$sync_fields()
 #'
-#' # subresource: create a public blob container
+#' ## subresource: create a public blob container
 #' stor$create_subresource(type="blobservices/default/containers", name="mycontainer",
 #'     properties=list(publicAccess="container"))
 #'
-#' # delete a subresource and resource
+#' ## delete a subresource and resource
 #' stor$delete_subresource(type="blobservices/default/containers", name="mycontainer")
 #' stor$delete()
 #'
