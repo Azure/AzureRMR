@@ -1,3 +1,7 @@
+# AzureRMR 2.3.6.9000
+
+- Transfer to AzureRSDK org on GitHub.
+
 # AzureRMR 2.3.6
 
 - Add ability to specify user-defined functions in `build_template_definition`. Also allow changing the schema, content version and api profile.
