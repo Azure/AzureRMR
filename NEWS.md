@@ -1,6 +1,7 @@
 # AzureRMR 2.3.6.9000
 
 - Transfer to AzureRSDK org on GitHub.
+- Some utility functions moved to AzureGraph package. These are imported and then reexported by AzureRMR so that existing code should work unchanged.
 
 # AzureRMR 2.3.6
 
