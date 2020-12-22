@@ -1,6 +1,19 @@
 #' @import AzureAuth
+#' @import AzureGraph
 #' @importFrom utils modifyList
 NULL
+
+#' @export
+AzureGraph::named_list
+
+#' @export
+AzureGraph::is_empty
+
+#' @export
+AzureGraph::format_public_fields
+
+#' @export
+AzureGraph::format_public_methods
 
 utils::globalVariables(c("self", "private", "pool"))
 

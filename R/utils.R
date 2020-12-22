@@ -1,64 +1,25 @@
 #' Miscellaneous utility functions
 #'
 #' @param lst A named list of objects.
-#' @param name_fields The components of the objects in `lst`, to be used as names.
-#' @param x For `is_url` and `is_empty`, An R object.
+#' @param x For `is_url`, An R object.
 #' @param https_only For `is_url`, whether to allow only HTTPS URLs.
 #' @param token For `get_paged_list`, an Azure OAuth token, of class [AzureToken].
 #' @param next_link_name,value_name For `get_paged_list`, the names of the next link and value components in the `lst` argument. The default values are correct for Resource Manager.
 #'
 #' @details
-#' `named_list` extracts from each object in `lst`, the components named by `name_fields`. It then constructs names for `lst` from these components, separated by a `"/"`.
-#'
 #' `get_paged_list` reconstructs a complete list of objects from a paged response. Many Resource Manager list operations will return _paged_ output, that is, the response contains a subset of all items, along with a URL to query to retrieve the next subset. `get_paged_list` retrieves each subset and returns all items in a single list.
 #'
 #' @return
-#' For `named_list`, the list that was passed in but with names. An empty input results in a _named list_ output: a list of length 0, with a `names` attribute.
-#'
 #' For `get_paged_list`, a list.
 #'
-#' For `is_url`, whether the object appears to be a URL (is character of length 1, and starts with the string `"http"`). Optionally, restricts the check to HTTPS URLs only. For `is_empty`, whether the length of the object is zero (this includes the special case of `NULL`).
+#' For `is_url`, whether the object appears to be a URL (is character of length 1, and starts with the string `"http"`). Optionally, restricts the check to HTTPS URLs only.
 #'
-#' @rdname utils
-#' @export
-named_list <- function(lst=NULL, name_fields="name")
-{
-    if(is_empty(lst))
-        return(structure(list(), names=character(0)))
-
-    lst_names <- sapply(name_fields, function(n) sapply(lst, `[[`, n))
-    if(length(name_fields) > 1)
-    {
-        dim(lst_names) <- c(length(lst_names) / length(name_fields), length(name_fields))
-        lst_names <- apply(lst_names, 1, function(nn) paste(nn, collapse="/"))
-    }
-    names(lst) <- lst_names
-    dups <- duplicated(tolower(names(lst)))
-    if(any(dups))
-    {
-        duped_names <- names(lst)[dups]
-        warning("Some names are duplicated: ", paste(unique(duped_names), collapse=" "), call.=FALSE)
-    }
-    lst
-}
-
-
-# check if a string appears to be a http/https URL, optionally only https allowed
 #' @rdname utils
 #' @export
 is_url <- function(x, https_only=FALSE)
 {
     pat <- if(https_only) "^https://" else "^https?://"
     is.character(x) && length(x) == 1 && grepl(pat, x)
-}
-
-
-# TRUE for NULL and length-0 objects
-#' @rdname utils
-#' @export
-is_empty <- function(x)
-{
-    length(x) == 0
 }
 
 
