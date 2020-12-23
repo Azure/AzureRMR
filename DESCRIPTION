@@ -13,7 +13,7 @@ VignetteBuilder: knitr
 Depends: 
     R (>= 3.3)
 Imports:
-    AzureGraph (>= 1.0.4),
+    AzureGraph (>= 1.1.2.9000),
     AzureAuth (>= 1.2.1),
     utils,
     parallel,
@@ -29,3 +29,5 @@ Suggests:
     AzureStor
 Roxygen: list(markdown=TRUE, r6=FALSE, old_usage=TRUE)
 RoxygenNote: 7.1.1
+Remotes:
+    hongooi73/AzureGraph
