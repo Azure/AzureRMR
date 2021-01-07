@@ -10,6 +10,9 @@
 #' - `sync_fields()`: Synchronise the R object with the resource it represents in Azure. Returns the `properties$provisioningState` field, so you can query this programmatically to check if a resource has finished provisioning. Not all resource types require explicit provisioning, in which case this method will return NULL.
 #' - `set_api_version(api_version, stable_only=TRUE)`: Set the API version to use when interacting with the host. If `api_version` is not supplied, use the latest version available, either the latest stable version (if `stable_only=TRUE`) or the latest preview version (if `stable_only=FALSE`).
 #' - `get_api_version()`: Get the current API version.
+#' - `get_subresource(type, name)`: Get a sub-resource of this resource. See 'Sub-resources' below.
+#' - `create_subresource(type, name, ...)`: Create a sub-resource of this resource.
+#' - `delete_subresource(type, name, confirm=TRUE)`: Delete a sub-resource of this resource.
 #' - `do_operation(...)`: Carry out an operation. See 'Operations' for more details.
 #' - `set_tags(..., keep_existing=TRUE)`: Set the tags on this resource. The tags can be either names or name-value pairs. To delete a tag, set it to `NULL`.
 #' - `get_tags()`: Get the tags on this resource.
@@ -53,6 +56,17 @@
 #' - `http_verb`: The HTTP verb as a string, one of `GET`, `PUT`, `POST`, `DELETE`, `HEAD` or `PATCH`.
 #'
 #' Consult the Azure documentation for your resource to find out what operations are supported.
+#'
+#' @section Sub-resources:
+#' Some resource types can have sub-resources: objects exposed by Resource Manager that make up a part of their parent's functionality. For example, a storage account (type `Microsoft.Storage/storageAccounts`) provides the blob storage service, which can be accessed via Resource Manager as a sub-resource of type `Microsoft.Storage/storageAccounts/blobServices/default`.
+#'
+#' To retrieve an existing sub-resource, use the `get_subresource()` method. You do not need to include the parent resource's type and name. For example, if `res` is a resource for a storage account, and you want to retrieve the sub-resource for the blob container "myblobs", call
+#'
+#' ```
+#' res$get_subresource(type="blobServices/default/containers", name="myblobs")
+#' ```
+#'
+#' Notice that the storage account's resource type and name are omitted from the `get_subresource` arguments. Similarly, to create a new subresource, call the `create_subresource()` method with the same naming convention, passing any required fields as named arguments; and to delete it, call `delete_subresource()`.
 #'
 #' @section Role-based access control:
 #' AzureRMR implements a subset of the full RBAC functionality within Azure Active Directory. You can retrieve role definitions and add and remove role assignments, at the subscription, resource group and resource levels. See [rbac] for more information.
@@ -106,7 +120,12 @@
 #' # sync with Azure: useful to track resource creation/update status
 #' vm$sync_fields()
 #'
-#' # delete a resource
+#' ## subresource: create a public blob container
+#' stor$create_subresource(type="blobservices/default/containers", name="mycontainer",
+#'     properties=list(publicAccess="container"))
+#'
+#' ## delete a subresource and resource
+#' stor$delete_subresource(type="blobservices/default/containers", name="mycontainer")
 #' stor$delete()
 #'
 #' }
@@ -232,6 +251,33 @@ public=list(
         }
 
         invisible(NULL)
+    },
+
+    get_subresource=function(type, name, id, api_version=NULL)
+    {
+        name <- file.path(self$name, type, name)
+        az_resource$new(self$token, self$subscription,
+                        resource_group=self$resource_group, type=self$type, name=name, id=id,
+                        api_version=api_version)
+    },
+
+    create_subresource=function(type, name, id, location=self$location, ...)
+    {
+        name <- file.path(self$name, type, name)
+        az_resource$new(self$token, self$subscription,
+                        resource_group=self$resource_group, type=self$type, name=name, id=id,
+                        location=location, ...)
+    },
+
+    delete_subresource=function(type, name, id, api_version=NULL, confirm=TRUE, wait=FALSE)
+    {
+        name <- file.path(self$name, type, name)
+        # supply deployed_properties arg to prevent querying host for resource info
+        az_resource$
+            new(self$token, self$subscription, self$resource_group,
+                type=self$type, name=name, id=id,
+                deployed_properties=list(NULL), api_version=api_version)$
+            delete(confirm=confirm, wait=wait)
     },
 
     do_operation=function(..., options=list(), http_verb="GET")
