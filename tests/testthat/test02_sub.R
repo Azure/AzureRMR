@@ -67,10 +67,10 @@ test_that("List filters work",
         function(r) is_resource(r) && r$type == "Microsoft.Storage/storageAccounts" && !is_empty(r$ext$createdTime))))
 })
 
-test_that("Subscription methods work with AAD v2.0",
+test_that("Subscription methods work with AAD v1.0",
 {
-    token <- get_azure_token(c("https://management.azure.com/.default", "offline_access"),
-                             tenant=tenant, app=app, password=password, version=2)
+    token <- get_azure_token("https://management.azure.com/",
+                            tenant=tenant, app=app, password=password, version=1)
     az <- az_rm$new(token=token)
 
     subs <- az$list_subscriptions()

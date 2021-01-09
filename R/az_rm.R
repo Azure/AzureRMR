@@ -22,9 +22,11 @@
 #' - `username`: if `auth_type == "resource_owner"`, your username.
 #' - `certificate`: If `auth_type == "client_credentials", a certificate to authenticate with. This is a more secure alternative to using an app secret.
 #' - `auth_type`: The OAuth authentication method to use, one of "client_credentials", "authorization_code", "device_code" or "resource_owner". See [get_azure_token] for how the default method is chosen, along with some caveats.
+#' - `version`: The Azure Active Directory version to use for authenticating.
 #' - `host`: your ARM host. Defaults to `https://management.azure.com/`. Change this if you are using a government or private cloud.
 #' - `aad_host`: Azure Active Directory host for authentication. Defaults to `https://login.microsoftonline.com/`. Change this if you are using a government or private cloud.
 #' - `...`: Further arguments to pass to `get_azure_token`.
+#' - `scopes`: The Azure Service Management scopes (permissions) to obtain for this login. Only for `version=2`.
 #' - `token`: Optionally, an OAuth 2.0 token, of class [AzureToken]. This allows you to reuse the authentication details for an existing session. If supplied, all other arguments will be ignored.
 #'
 #' @section Operations:
@@ -72,9 +74,9 @@ public=list(
 
     # authenticate and get subscriptions
     initialize=function(tenant="common", app=.az_cli_app_id,
-                        password=NULL, username=NULL, certificate=NULL, auth_type=NULL,
+                        password=NULL, username=NULL, certificate=NULL, auth_type=NULL, version=2,
                         host="https://management.azure.com/", aad_host="https://login.microsoftonline.com/",
-                        token=NULL, ...)
+                        scopes=".default", token=NULL, ...)
     {
         if(is_azure_token(token))
         {
@@ -88,7 +90,10 @@ public=list(
         self$tenant <- normalize_tenant(tenant)
         app <- normalize_guid(app)
 
-        token_args <- list(resource=self$host,
+        if(version == 2)
+            host <- c(paste0(host, scopes), "openid", "offline_access")
+
+        token_args <- list(resource=host,
             tenant=self$tenant,
             app=app,
             password=password,
@@ -96,6 +101,7 @@ public=list(
             certificate=certificate,
             auth_type=auth_type,
             aad_host=aad_host,
+            version=version,
             ...)
 
         self$token <- do.call(get_azure_token, token_args)

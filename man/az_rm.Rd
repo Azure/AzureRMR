@@ -33,9 +33,11 @@ To authenticate with the \code{az_rm} class directly, provide the following argu
 \item \code{username}: if \code{auth_type == "resource_owner"}, your username.
 \item \code{certificate}: If `auth_type == "client_credentials", a certificate to authenticate with. This is a more secure alternative to using an app secret.
 \item \code{auth_type}: The OAuth authentication method to use, one of "client_credentials", "authorization_code", "device_code" or "resource_owner". See \link{get_azure_token} for how the default method is chosen, along with some caveats.
+\item \code{version}: The Azure Active Directory version to use for authenticating.
 \item \code{host}: your ARM host. Defaults to \verb{https://management.azure.com/}. Change this if you are using a government or private cloud.
 \item \code{aad_host}: Azure Active Directory host for authentication. Defaults to \verb{https://login.microsoftonline.com/}. Change this if you are using a government or private cloud.
 \item \code{...}: Further arguments to pass to \code{get_azure_token}.
+\item \code{scopes}: The Azure Service Management scopes (permissions) to obtain for this login. Only for \code{version=2}.
 \item \code{token}: Optionally, an OAuth 2.0 token, of class \link{AzureToken}. This allows you to reuse the authentication details for an existing session. If supplied, all other arguments will be ignored.
 }
 }

@@ -9,9 +9,10 @@
 \usage{
 create_azure_login(tenant = "common", app = .az_cli_app_id,
   password = NULL, username = NULL, certificate = NULL,
-  auth_type = NULL, host = "https://management.azure.com/",
-  aad_host = "https://login.microsoftonline.com/", config_file = NULL,
-  token = NULL, graph_host = "https://graph.microsoft.com/", ...)
+  auth_type = NULL, version = 2, host = "https://management.azure.com/",
+  aad_host = "https://login.microsoftonline.com/", scopes = ".default",
+  config_file = NULL, token = NULL,
+  graph_host = "https://graph.microsoft.com/", ...)
 
 get_azure_login(tenant = "common", selection = NULL, refresh = TRUE)
 
@@ -32,9 +33,13 @@ list_azure_logins()
 
 \item{auth_type}{The OAuth authentication method to use, one of "client_credentials", "authorization_code", "device_code" or "resource_owner". If \code{NULL}, this is chosen based on the presence of the \code{username} and \code{password} arguments.}
 
+\item{version}{The Azure Active Directory version to use for authenticating.}
+
 \item{host}{Your ARM host. Defaults to \verb{https://management.azure.com/}. Change this if you are using a government or private cloud.}
 
 \item{aad_host}{Azure Active Directory host for authentication. Defaults to \verb{https://login.microsoftonline.com/}. Change this if you are using a government or private cloud.}
+
+\item{scopes}{The Azure Service Management scopes (permissions) to obtain for this login. Only for \code{version=2}.}
 
 \item{config_file}{Optionally, a JSON file containing any of the arguments listed above. Arguments supplied in this file take priority over those supplied on the command line. You can also use the output from the Azure CLI \verb{az ad sp create-for-rbac} command.}
 
