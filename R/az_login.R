@@ -68,7 +68,8 @@
 create_azure_login <- function(tenant="common", app=.az_cli_app_id,
                                password=NULL, username=NULL, certificate=NULL, auth_type=NULL,
                                host="https://management.azure.com/", aad_host="https://login.microsoftonline.com/",
-                               config_file=NULL, token=NULL, graph_host="https://graph.microsoft.com/", ...)
+                               config_file=NULL, token=NULL, graph_host="https://graph.microsoft.com/",
+                               scopes=".default", version=2, ...)
 {
     if(!is_azure_token(token))
     {
@@ -84,6 +85,9 @@ create_azure_login <- function(tenant="common", app=.az_cli_app_id,
         tenant <- normalize_tenant(tenant)
         app <- normalize_guid(app)
 
+        if(version == 2)
+            host <- c(paste0(host, scopes), "openid", "offline_access")
+
         token_args <- list(resource=host,
             tenant=tenant,
             app=app,
@@ -92,6 +96,7 @@ create_azure_login <- function(tenant="common", app=.az_cli_app_id,
             certificate=certificate,
             auth_type=auth_type,
             aad_host=aad_host,
+            version=version,
             ...)
 
         hash <- do.call(token_hash, token_args)

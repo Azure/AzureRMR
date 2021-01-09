@@ -74,7 +74,7 @@ public=list(
     initialize=function(tenant="common", app=.az_cli_app_id,
                         password=NULL, username=NULL, certificate=NULL, auth_type=NULL,
                         host="https://management.azure.com/", aad_host="https://login.microsoftonline.com/",
-                        token=NULL, ...)
+                        scopes=".default", version=2, token=NULL, ...)
     {
         if(is_azure_token(token))
         {
@@ -88,7 +88,10 @@ public=list(
         self$tenant <- normalize_tenant(tenant)
         app <- normalize_guid(app)
 
-        token_args <- list(resource=self$host,
+        if(version == 2)
+            host <- c(paste0(host, scopes), "openid", "offline_access")
+
+        token_args <- list(resource=host,
             tenant=self$tenant,
             app=app,
             password=password,
@@ -96,6 +99,7 @@ public=list(
             certificate=certificate,
             auth_type=auth_type,
             aad_host=aad_host,
+            version=version,
             ...)
 
         self$token <- do.call(get_azure_token, token_args)
