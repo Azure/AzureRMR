@@ -6,8 +6,8 @@ Authors@R: c(
     person("Microsoft", role="cph")
     )
 Description: A lightweight but powerful R interface to the 'Azure Resource Manager' REST API. The package exposes a comprehensive class framework and related tools for creating, updating and deleting 'Azure' resource groups, resources and templates. While 'AzureRMR' can be used to manage any 'Azure' service, it can also be extended by other packages to provide extra functionality for specific services. Part of the 'AzureR' family of packages.
-URL: https://github.com/AzureR/AzureRMR https://github.com/AzureR/AzureR
-BugReports: https://github.com/AzureR/AzureRMR/issues
+URL: https://github.com/AzureRSDK/AzureRMR https://github.com/AzureRSDK/AzureR
+BugReports: https://github.com/AzureRSDK/AzureRMR/issues
 License: MIT + file LICENSE
 VignetteBuilder: knitr
 Depends: 

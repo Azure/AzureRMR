@@ -9,10 +9,7 @@ if(tenant == "" || app == "" || password == "" || subscription == "")
     skip("Authentication tests skipped: ARM credentials not set")
 
 
-clean_token_directory(confirm=FALSE)
 suppressWarnings(file.remove(file.path(AzureR_dir(), "arm_logins.json")))
-
-scopes <- c("https://management.azure.com/.default", "openid", "offline_access")
 
 test_that("ARM authentication works",
 {
@@ -20,7 +17,7 @@ test_that("ARM authentication works",
     expect_is(az, "az_rm")
     expect_true(is_azure_token(az$token))
 
-    tok <- get_azure_token(scopes, tenant, app, password, version=2)
+    tok <- get_azure_token("https://management.azure.com/", tenant, app, password)
     az2 <- az_rm$new(token=tok)
     expect_is(az2, "az_rm")
 })
@@ -43,7 +40,7 @@ test_that("Login interface works",
     az5 <- get_azure_login(tenant)
     expect_is(az5, "az_rm")
 
-    tok <- get_azure_token(scopes, tenant, app, password, version=2)
+    tok <- get_azure_token("https://management.azure.com/", tenant, app, password)
     az6 <- create_azure_login(token=tok, graph_host=NULL)
     expect_is(az6, "az_rm")
 })

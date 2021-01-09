@@ -34,7 +34,7 @@ jobs:
           token: "${{ secrets.ghPat }}"
         # git config hack required, see https://stackoverflow.com/q/64270867/474349
         run: |
-          export CLOUDYR_REPO=$(echo $GITHUB_REPOSITORY | sed "s/AzureR/cloudyr/")
+          export CLOUDYR_REPO=$(echo $GITHUB_REPOSITORY | sed "s/AzureRSDK/cloudyr/")
           git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | \
             xargs -L1 git config --unset-all
           git push --prune https://token:$token@github.com/${CLOUDYR_REPO}.git +refs/remotes/origin/*:refs/heads/* +refs/tags/*:refs/tags/*
