@@ -1,6 +1,5 @@
 # AzureRMR 2.3.6.9000
 
-- Transfer to AzureRSDK org on GitHub.
 - Some utility functions moved to AzureGraph package. These are imported and then reexported by AzureRMR so that existing code should work unchanged.
 - Add methods to get, create and delete sub-resources of a resource, eg `res$get_subresource(type="subrestype", name="subresname")`. See `az_resource` for more information.
 
