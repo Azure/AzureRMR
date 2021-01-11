@@ -61,6 +61,10 @@ test_that("Graph interop works",
 
     gr <- AzureGraph::get_graph_login(tenant)
     expect_is(gr, "ms_graph")
+    expect_true(
+        (!is.null(gr$token$resource) && grepl("graph\\.microsoft\\.com", gr$token$resource)) ||
+        (!is.null(gr$token$scope) && any(grepl("graph\\.microsoft\\.com", gr$token$scope)))
+    )
 })
 
 test_that("Top-level do_operation works",

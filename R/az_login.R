@@ -87,10 +87,11 @@ create_azure_login <- function(tenant="common", app=.az_cli_app_id,
         tenant <- normalize_tenant(tenant)
         app <- normalize_guid(app)
 
-        if(version == 2)
-            host <- c(paste0(host, scopes), "openid", "offline_access")
+        newhost <- if(version == 2)
+            c(paste0(host, scopes), "openid", "offline_access")
+        else host
 
-        token_args <- list(resource=host,
+        token_args <- list(resource=newhost,
             tenant=tenant,
             app=app,
             password=password,
@@ -121,7 +122,7 @@ create_azure_login <- function(tenant="common", app=.az_cli_app_id,
     arm_logins[[tenant]] <- sort(unique(c(arm_logins[[tenant]], client$token$hash())))
     save_arm_logins(arm_logins)
 
-    make_graph_login_from_token(token, aad_host, graph_host)
+    make_graph_login_from_token(token, host, graph_host)
 
     client
 }
