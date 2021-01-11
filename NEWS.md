@@ -2,6 +2,7 @@
 
 - Some utility functions moved to AzureGraph package. These are imported and then reexported by AzureRMR so that existing code should work unchanged.
 - Add methods to get, create and delete sub-resources of a resource, eg `res$get_subresource(type="subrestype", name="subresname")`. See `az_resource` for more information.
+- Fix a bug in obtaining the Microsoft Graph login when using AAD v2.0.
 - Switch to AAD v2.0 as the default for authenticating.
 
 # AzureRMR 2.3.6
