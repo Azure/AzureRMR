@@ -146,43 +146,22 @@ get_azure_login <- function(tenant="common", selection=NULL, refresh=TRUE)
         stop(msg, call.=FALSE)
     }
 
-    if(length(this_login) == 1 && is.null(selection))
-        selection <- 1
-    else if(is.null(selection))
-    {
-        tokens <- lapply(this_login, function(f)
-            readRDS(file.path(AzureR_dir(), f)))
+    message("Loading Microsoft Graph login for ", format_tenant(tenant))
 
-        choices <- sapply(tokens, function(token)
-        {
-            app <- token$client$client_id
-            paste0("App ID: ", app, "\n   Authentication method: ", token$auth_type)
-        })
+    # do we need to choose which login client to use?
+    have_selection <- !is.null(selection)
+    have_auth_spec <- any(!is.null(app), !is.null(scopes), !is.null(auth_type))
 
-        msg <- paste0("Choose an Azure Resource Manager login for ", format_tenant(tenant))
-        selection <- utils::menu(choices, title=msg)
-    }
+    token <- if(length(this_login) > 1 || have_selection || have_auth_spec)
+        choose_token(this_login, selection, app, scopes, auth_type)
+    else load_azure_token(this_login)
 
-    if(selection == 0)
+    if(is.null(token))
         return(NULL)
 
-    file <- if(is.numeric(selection))
-        this_login[selection]
-    else if(is.character(selection))
-        this_login[which(this_login == selection)] # force an error if supplied hash doesn't match available logins
-
-    file <- file.path(AzureR_dir(), file)
-    if(is_empty(file) || !file.exists(file))
-        stop("Azure Active Directory token not found for this login", call.=FALSE)
-
-    message("Loading Azure Resource Manager login for ", format_tenant(tenant))
-
-    token <- readRDS(file)
-    client <- az_rm$new(token=token)
-
+    client <- ms_graph$new(token=token)
     if(refresh)
         client$token$refresh()
-
     client
 }
 
@@ -259,3 +238,88 @@ format_tenant <- function(tenant)
         "default tenant"
     else paste0("tenant '", tenant, "'")
 }
+
+
+# algorithm for choosing a token:
+# if given a hash, choose it (error if no match)
+# otherwise if given a number, use it (error if out of bounds)
+# otherwise if given any of app|scopes|auth_type, use those (error if no match, ask if multiple matches)
+# otherwise ask
+choose_token <- function(hashes, selection, app, scopes, auth_type)
+{
+    if(is.character(selection))
+    {
+        if(!(selection %in% hashes))
+            stop("Token with selected hash not found", call.=FALSE)
+        return(load_azure_token(selection))
+    }
+
+    if(is.numeric(selection))
+    {
+        if(selection <= 0 || selection > length(hashes))
+            stop("Invalid numeric selection", call.=FALSE)
+        return(load_azure_token(hashes[selection]))
+    }
+
+    tokens <- lapply(hashes, load_azure_token)
+    ok <- rep(TRUE, length(tokens))
+
+    # filter down list of tokens based on auth criteria
+    if(!is.null(app) || !is.null(scopes) || !is.null(auth_type))
+    {
+        if(!is.null(scopes))
+            scopes <- tolower(scopes)
+
+        # look for matching token
+        for(i in seq_along(hashes))
+        {
+            app_match <- scope_match <- auth_match <- TRUE
+
+            if(!is.null(app) && tokens[[i]]$client$client_id != app)
+                app_match <- FALSE
+            if(!is.null(scopes))
+            {
+                # AAD v1.0 tokens do not have scopes
+                if(is.null(tokens[[i]]$scope))
+                    scope_match <- is.na(scopes)
+                else
+                {
+                    tok_scopes <- tolower(basename(grep("^.+://", tokens[[i]]$scope, value=TRUE)))
+                    if(!setequal(scopes, tok_scopes))
+                        scope_match <- FALSE
+                }
+            }
+            if(!is.null(auth_type) && tokens[[i]]$auth_type != auth_type)
+                auth_match <- FALSE
+
+            if(!app_match || !scope_match || !auth_match)
+                ok[i] <- FALSE
+        }
+    }
+
+    tokens <- tokens[ok]
+    if(length(tokens) == 0)
+        stop("No tokens found with selected authentication parameters", call.=FALSE)
+    else if(length(tokens) == 1)
+        return(tokens[[1]])
+
+    # bring up a menu
+    tenant <- tokens[[1]]$tenant
+    choices <- sapply(tokens, function(token)
+    {
+        app <- token$client$client_id
+        scopes <- if(!is.null(token$scope))
+            paste(tolower(basename(grep("^.+://", token$scope, value=TRUE))), collapse=" ")
+        else "<NA>"
+        paste0("App ID: ", app,
+               "\n   Scopes: ", scopes,
+               "\n   Authentication method: ", token$auth_type,
+               "\n   MD5 Hash: ", token$hash())
+    })
+    msg <- paste0("Choose a Microsoft Graph login for ", format_tenant(tenant))
+    selection <- utils::menu(choices, title=msg)
+    if(selection == 0)
+        invisible(NULL)
+    else tokens[[selection]]
+}
+
