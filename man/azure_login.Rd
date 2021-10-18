@@ -14,7 +14,8 @@ create_azure_login(tenant = "common", app = .az_cli_app_id,
   config_file = NULL, token = NULL,
   graph_host = "https://graph.microsoft.com/", ...)
 
-get_azure_login(tenant = "common", selection = NULL, refresh = TRUE)
+get_azure_login(tenant = "common", selection = NULL, app = NULL,
+  scopes = NULL, auth_type = NULL, refresh = TRUE)
 
 delete_azure_login(tenant = "common", confirm = TRUE)
 

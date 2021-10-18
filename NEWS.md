@@ -1,3 +1,7 @@
+# AzureRMR 2.4.2.9000
+
+- Some tweaks to the internal logic for retrieving ARM logins.
+
 # AzureRMR 2.4.2
 
 - Replace the old "Service principal" vignette with an "Authentication basics" vignette, which provides more information on common authentication flows.
