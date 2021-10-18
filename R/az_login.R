@@ -130,7 +130,7 @@ create_azure_login <- function(tenant="common", app=.az_cli_app_id,
 
 #' @rdname azure_login
 #' @export
-get_azure_login <- function(tenant="common", selection=NULL, refresh=TRUE)
+get_azure_login <- function(tenant="common", selection=NULL, app=NULL, scopes=NULL, auth_type=NULL, refresh=TRUE)
 {
     if(!dir.exists(AzureR_dir()))
         stop("AzureR data directory does not exist; cannot load saved logins")
@@ -146,7 +146,7 @@ get_azure_login <- function(tenant="common", selection=NULL, refresh=TRUE)
         stop(msg, call.=FALSE)
     }
 
-    message("Loading Microsoft Graph login for ", format_tenant(tenant))
+    message("Loading Azure Resource Manager login for ", format_tenant(tenant))
 
     # do we need to choose which login client to use?
     have_selection <- !is.null(selection)
@@ -159,7 +159,7 @@ get_azure_login <- function(tenant="common", selection=NULL, refresh=TRUE)
     if(is.null(token))
         return(NULL)
 
-    client <- ms_graph$new(token=token)
+    client <- az_rm$new(token=token)
     if(refresh)
         client$token$refresh()
     client
