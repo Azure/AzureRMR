@@ -86,6 +86,7 @@ public=list(
     state=NULL,
     policies=NULL,
     authorization_source=NULL,
+    tags=NULL,
     token=NULL,
 
     initialize=function(token, id=NULL, parms=list())
