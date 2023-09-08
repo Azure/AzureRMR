@@ -196,7 +196,7 @@ list_azure_logins <- function()
     logins <- sapply(arm_logins, function(tenant)
     {
         sapply(tenant,
-            function(hash) az_rm$new(token=load_azure_token(file)),
+            function(hash) az_rm$new(token=load_azure_token(hash)),
             simplify=FALSE)
     }, simplify=FALSE)
 
